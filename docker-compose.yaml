@@ -1,0 +1,29 @@
+
+services:
+ dynamodb-local:
+   command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
+   image: "amazon/dynamodb-local:latest"
+   container_name: dynamodb-local
+   ports:
+     - "8000:8000"
+   volumes:
+     - "./docker/dynamodb:/home/dynamodblocal/data"
+   working_dir: /home/dynamodblocal
+ mysql:
+   image: mysql:8.0
+   container_name: mysql-local
+   restart: unless-stopped
+   environment:
+     MYSQL_ROOT_PASSWORD: root
+     MYSQL_DATABASE: transport_system_management
+     MYSQL_USER: prisma
+     MYSQL_PASSWORD: prisma
+   ports:
+     - "3306:3306"
+   volumes:
+     - "./docker/mysql:/var/lib/mysql"
+   healthcheck:
+     test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+     interval: 10s
+     timeout: 5s
+     retries: 5

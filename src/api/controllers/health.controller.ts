@@ -1,0 +1,35 @@
+import { Request, Response, NextFunction } from "express";
+import { ListTablesCommand } from "@aws-sdk/client-dynamodb";
+import { dynamoDbClient } from "../config/dynamodb.client";
+
+export class HealthController {
+  checkHealth = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const databaseStatus = await this.checkDatabaseConnection();
+      res.status(200).json({
+        status: "OK",
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+        services: {
+          database: databaseStatus,
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  private async checkDatabaseConnection(): Promise<"connected" | "disconnected"> {
+    try {
+      await dynamoDbClient.send(new ListTablesCommand({ Limit: 1 }));
+      return "connected";
+    } catch (error) {
+      console.error("DynamoDB health check failed:", error);
+      return "disconnected";
+    }
+  }
+}
