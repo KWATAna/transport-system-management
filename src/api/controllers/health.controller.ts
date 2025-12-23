@@ -29,7 +29,7 @@ export class HealthController {
     try {
       await dynamoDbClient.send(
         new GetItemCommand({
-          TableName: process.env.ROUTES_TABLE!,
+          TableName: process.env.ROUTES_TABLE ?? "Routes",
           Key: {
             id: { S: "__healthcheck__" },
           },
