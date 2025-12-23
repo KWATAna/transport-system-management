@@ -41,6 +41,9 @@ interface VehicleSeed {
   updatedAt: string;
 }
 
+const generateRouteId = () => `route-${uuidv4().substring(0, 8)}`;
+const generateVehicleId = () => `vehicle-${uuidv4().substring(0, 8)}`;
+
 const dynamoDBClient = new DynamoDBClient({
   region: process.env.AWS_REGION || "eu-central-1",
   endpoint: process.env.AWS_DYNAMODB_ENDPOINT,
@@ -97,7 +100,7 @@ const generateVehicles = (count: number): VehicleSeed[] => {
     const transportType: TransportType = getRandomTransportType();
 
     const vehicle: VehicleSeed = {
-      id: `vehicle-${uuidv4().substring(0, 8)}`,
+      id: generateVehicleId(),
       licensePlate: generateLicensePlate(),
       model:
         modelsByType[transportType][
@@ -182,7 +185,7 @@ const generateRoutes = (
       transportTypes[Math.floor(Math.random() * transportTypes.length)];
 
     const route: RouteSeed = {
-      id: `route-${uuidv4().substring(0, 8)}`,
+      id: generateRouteId(),
       startPoint: {
         lat: startCity.lat + (Math.random() * 0.5 - 0.25),
         lng: startCity.lng + (Math.random() * 0.5 - 0.25),

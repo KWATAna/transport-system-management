@@ -1,5 +1,5 @@
 import { DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
-import { IRepository } from "../../interfaces/repositories.interface";
+import { IRepository } from "../interfaces/repositories.interface";
 import { Tables } from "../../constants";
 
 export abstract class BaseDynamoDBRepository<T, CreateDto, UpdateDto>
@@ -18,7 +18,6 @@ export abstract class BaseDynamoDBRepository<T, CreateDto, UpdateDto>
     this.routesTable = Tables.ROUTES;
   }
 
-  // Abstract methods that child classes must implement
   protected abstract mapToEntity(item: any): T;
   protected abstract mapToDynamoDBItem(data: CreateDto | UpdateDto): any;
 

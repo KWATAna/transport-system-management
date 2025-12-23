@@ -9,7 +9,7 @@ import {
   TransactWriteCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { BaseDynamoDBRepository } from "./base/base.repository";
-import { IVehicleRepository } from "../interfaces/repositories.interface";
+import { IVehicleRepository } from "./interfaces/repositories.interface";
 import { VehicleResponseDto } from "../types/vehicle.types";
 import { CreateVehicleDto, UpdateVehicleDto } from "../types/vehicle.types";
 import { v4 as uuidv4 } from "uuid";

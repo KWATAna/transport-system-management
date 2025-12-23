@@ -1,5 +1,5 @@
 import { IVehicleService } from "../interfaces/services.interface";
-import { IVehicleRepository } from "../interfaces/repositories.interface";
+import { IVehicleRepository } from "../repository/interfaces/repositories.interface";
 import {
   CreateVehicleDto,
   UpdateVehicleDto,
@@ -75,6 +75,7 @@ export class VehicleService implements IVehicleService {
     transportType?: string
   ): Promise<VehicleResponseDto[]> {
     // Get all FREE vehicles
+    // TODO fix this in repository
     const freeVehicles = await this.vehicleRepository.findByStatus("FREE");
 
     // Filter by transport type if specified

@@ -25,7 +25,6 @@ export class ApiError extends Error implements IApiError {
     this.details = details;
     this.timestamp = new Date().toISOString();
 
-    // Maintain proper stack trace
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, ApiError);
     }

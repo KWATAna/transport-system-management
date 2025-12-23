@@ -4,7 +4,13 @@ const vehicleStatuses = ["available", "assigned"] as const;
 
 const transportTypes = ["truck", "van", "car", "refrigerated"] as const;
 
+const vehicleIdRegex = /^vehicle-[0-9a-f]{8}$/;
+
 export const createVehicleSchema = z.object({
+  id: z
+    .string()
+    .regex(vehicleIdRegex, "Invalid vehicle ID format")
+    .optional(),
   model: z.string().min(1, "Model cannot be empty"),
 
   licensePlate: z

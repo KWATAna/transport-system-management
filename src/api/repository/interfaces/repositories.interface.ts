@@ -2,12 +2,12 @@ import {
   CreateRouteDto,
   UpdateRouteDto,
   RouteResponseDto,
-} from "../types/route.types";
+} from "../../types/route.types";
 import {
   CreateVehicleDto,
   UpdateVehicleDto,
   VehicleResponseDto,
-} from "../types/vehicle.types";
+} from "../../types/vehicle.types";
 
 export interface IRepository<T, CreateDto, UpdateDto> {
   create(data: CreateDto): Promise<T>;

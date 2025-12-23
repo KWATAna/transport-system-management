@@ -14,7 +14,7 @@ import { ROUTE_STATUSES } from "../constants";
 import { ApiError } from "../errors/api.error";
 
 import { BaseDynamoDBRepository } from "./base/base.repository";
-import { IRouteRepository } from "../interfaces/repositories.interface";
+import { IRouteRepository } from "./interfaces/repositories.interface";
 import {
   CreateRouteDto,
   RouteResponseDto,
@@ -506,6 +506,6 @@ export class RouteDynamoDBRepository
   }
 
   private generateId(): string {
-    return `ROUTE-${Date.now()}-${uuidv4().substring(0, 8)}`;
+    return `route-${uuidv4().substring(0, 8)}`;
   }
 }

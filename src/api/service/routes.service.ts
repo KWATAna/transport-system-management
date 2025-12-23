@@ -1,14 +1,14 @@
 import { IRouteService } from "../interfaces/services.interface";
 import { IGeolocationService } from "../clients/interfaces/geolocation.interface";
 import { ICurrencyService } from "../interfaces/currency.interface";
-import { IRouteRepository } from "../interfaces/repositories.interface";
+import { IRouteRepository } from "../repository/interfaces/repositories.interface";
 import { CURRENCIES, ROUTE_STATUSES } from "../constants";
 import {
   CreateRouteDto,
   UpdateRouteDto,
   RouteResponseDto,
 } from "../types/route.types";
-import { IVehicleRepository } from "../interfaces/repositories.interface";
+import { IVehicleRepository } from "../repository/interfaces/repositories.interface";
 import { VEHICLE_STATUSES } from "../constants";
 import {
   RouteInProgressError,
@@ -78,8 +78,6 @@ export class RouteService implements IRouteService {
   async update(id: string, data: UpdateRouteDto): Promise<RouteResponseDto> {
     const existingRoute = await this.getById(id);
 
-    // TODO: Validate status transitions
-    console.log("Existing route status:", existingRoute, data);
     if (data.status) {
       if (
         existingRoute.status === ROUTE_STATUSES.IN_PROGRESS &&

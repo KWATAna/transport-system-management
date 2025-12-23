@@ -24,9 +24,15 @@ export const TransportType = z.enum(["truck", "van", "car", "refrigerated"]);
 
 export const Currency = z.enum(["EUR", "USD", "UAH"]);
 
+const routeIdRegex = /^route-[0-9a-f]{8}$/;
+const vehicleIdRegex = /^vehicle-[0-9a-f]{8}$/;
+
 export const createRouteSchema = z
   .object({
-    id: z.uuid("Invalid UUID format").optional(),
+    id: z
+      .string()
+      .regex(routeIdRegex, "Invalid route ID format")
+      .optional(),
 
     startPoint: coordinateSchema.refine((point) => {
       return Math.abs(point.lat) <= 90 && Math.abs(point.lng) <= 180;
@@ -73,7 +79,10 @@ export const createRouteSchema = z
 
     status: RouteStatus.default("pending"),
 
-    vehicleId: z.string().uuid("Invalid vehicle ID format").optional(),
+    vehicleId: z
+      .string()
+      .regex(vehicleIdRegex, "Invalid vehicle ID format")
+      .optional(),
 
     notes: z.string().max(500, "Notes cannot exceed 500 characters").optional(),
   })
@@ -109,7 +118,15 @@ export const updateRouteSchema = createRouteSchema
   .partial()
   .extend({
     status: RouteStatus.optional(),
-    id: z.uuid("Invalid UUID format"),
+    id: z
+      .string()
+      .regex(routeIdRegex, "Invalid route ID format")
+      .optional(),
+    vehicleId: z
+      .string()
+      .regex(vehicleIdRegex, "Invalid vehicle ID format")
+      .nullable()
+      .optional(),
   })
   .refine(
     (data) => {
@@ -133,7 +150,8 @@ export const routeQuerySchema = z.object({
 export const assignVehicleSchema = z.object({
   vehicleId: z
     .string()
-    .regex(/^vehicle-[0-9a-f]{8}$/, "Invalid vehicle ID format"),
+    .regex(vehicleIdRegex, "Invalid vehicle ID format")
+    .nullable(),
 });
 
 export type CreateRouteDto = z.infer<typeof createRouteSchema>;

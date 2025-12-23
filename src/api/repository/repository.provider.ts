@@ -1,7 +1,7 @@
 import {
   IRouteRepository,
   IVehicleRepository,
-} from "../interfaces/repositories.interface";
+} from "./interfaces/repositories.interface";
 import { VehicleDynamoDBRepository } from "./vehicles.repository";
 import { RouteDynamoDBRepository } from "./routes.repository";
 import { dynamoDbClient } from "../config/dynamodb.client";
