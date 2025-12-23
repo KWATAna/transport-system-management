@@ -239,6 +239,7 @@ const seedData = async (vehicleCount: number = 8, routeCount: number = 15) => {
       vehicleSuccess++;
     } catch (error: any) {
       vehicleErrors++;
+      console.log(JSON.stringify(error));
       console.log(`Failed: ${error.message}`);
     }
   }

@@ -84,6 +84,37 @@ export class RouteDynamoDBRepository
         : 0;
 
     try {
+      if (appliedFilters.requiredTransportType) {
+        const expressionAttributeNames: Record<string, string> = {
+          "#requiredTransportType": "requiredTransportType",
+        };
+        const expressionAttributeValues: Record<string, any> = {
+          ":requiredTransportType": appliedFilters.requiredTransportType,
+        };
+        let keyConditionExpression =
+          "#requiredTransportType = :requiredTransportType";
+
+        if (appliedFilters.status) {
+          expressionAttributeNames["#status"] = "status";
+          expressionAttributeValues[":status"] = appliedFilters.status;
+          keyConditionExpression += " AND #status = :status";
+        }
+
+        const command = new QueryCommand({
+          TableName: this.tableName,
+          IndexName: "TransportTypeIndex",
+          KeyConditionExpression: keyConditionExpression,
+          ExpressionAttributeNames: expressionAttributeNames,
+          ExpressionAttributeValues: expressionAttributeValues,
+          Limit: limit ? limit + offset : undefined,
+        });
+
+        const response = await this.dynamoDbClient.send(command);
+        const items = response.Items || [];
+        const slicedItems = offset ? items.slice(offset) : items;
+        return slicedItems.map((item) => this.mapToEntity(item));
+      }
+
       if (appliedFilters.status) {
         const command = new QueryCommand({
           TableName: this.tableName,
@@ -398,34 +429,6 @@ export class RouteDynamoDBRepository
       return response.Items?.map((item) => this.mapToEntity(item)) || [];
     } catch (error) {
       console.error("Error getting active routes:", error);
-      throw error;
-    }
-  }
-
-  async findRoutesByDateRange(
-    startDate: string,
-    endDate: string
-  ): Promise<RouteResponseDto[]> {
-    try {
-      const command = new QueryCommand({
-        TableName: this.tableName,
-        IndexName: "StatusIndex",
-        KeyConditionExpression:
-          "#status = :status AND departureDate BETWEEN :startDate AND :endDate",
-        ExpressionAttributeNames: {
-          "#status": "status",
-        },
-        ExpressionAttributeValues: {
-          ":status": "pending",
-          ":startDate": startDate,
-          ":endDate": endDate,
-        },
-      });
-
-      const response = await this.dynamoDbClient.send(command);
-      return response.Items?.map((item) => this.mapToEntity(item)) || [];
-    } catch (error) {
-      console.error("Error finding routes by date range:", error);
       throw error;
     }
   }

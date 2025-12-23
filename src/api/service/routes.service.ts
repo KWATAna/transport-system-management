@@ -85,10 +85,17 @@ export class RouteService implements IRouteService {
   }
 
   async getAll(filters?: any): Promise<RouteResponseDto[]> {
-    const { status, limit, offset } = filters || {};
+    const { status, limit, offset, requiredTransportType, transportType } =
+      filters || {};
 
     const parsedFilters = {
       status: typeof status === "string" ? status : undefined,
+      requiredTransportType:
+        typeof requiredTransportType === "string"
+          ? requiredTransportType
+          : typeof transportType === "string"
+            ? transportType
+            : undefined,
       limit:
         typeof limit === "number" && Number.isInteger(limit)
           ? limit
@@ -128,11 +135,13 @@ export class RouteService implements IRouteService {
       (value) => value !== undefined
     );
 
+    let updatedRoute: RouteResponseDto | null = null;
+
     if (!hasOtherUpdates) {
       return routeAfterVehicleChange ?? existingRoute;
     }
 
-    const updatedRoute = await this.routeRepository.update(
+    updatedRoute = await this.routeRepository.update(
       id,
       routeUpdates as UpdateRouteDto
     );
@@ -141,7 +150,18 @@ export class RouteService implements IRouteService {
       throw new RouteNotFoundError(id);
     }
 
-    return updatedRoute;
+    const finalRoute = updatedRoute ?? routeAfterVehicleChange ?? existingRoute;
+
+    if (
+      data.status === ROUTE_STATUSES.COMPLETED &&
+      finalRoute.vehicleId
+    ) {
+      await this.vehicleRepository.update(finalRoute.vehicleId, {
+        status: VEHICLE_STATUSES.AVAILABLE,
+      });
+    }
+
+    return finalRoute;
   }
 
   async delete(id: string): Promise<void> {

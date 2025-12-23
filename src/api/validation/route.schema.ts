@@ -29,10 +29,7 @@ const vehicleIdRegex = /^vehicle-[0-9a-f]{8}$/;
 
 export const createRouteSchema = z
   .object({
-    id: z
-      .string()
-      .regex(routeIdRegex, "Invalid route ID format")
-      .optional(),
+    id: z.string().regex(routeIdRegex, "Invalid route ID format").optional(),
 
     startPoint: coordinateSchema.refine((point) => {
       return Math.abs(point.lat) <= 90 && Math.abs(point.lng) <= 180;
@@ -118,10 +115,7 @@ export const updateRouteSchema = createRouteSchema
   .partial()
   .extend({
     status: RouteStatus.optional(),
-    id: z
-      .string()
-      .regex(routeIdRegex, "Invalid route ID format")
-      .optional(),
+    id: z.string().regex(routeIdRegex, "Invalid route ID format").optional(),
     vehicleId: z
       .string()
       .regex(vehicleIdRegex, "Invalid vehicle ID format")
@@ -141,8 +135,6 @@ export const updateRouteSchema = createRouteSchema
 export const routeQuerySchema = z.object({
   status: RouteStatus.optional(),
   transportType: TransportType.optional(),
-  startDate: z.iso.datetime().optional(),
-  endDate: z.iso.datetime().optional(),
   limit: z.coerce.number().int().positive().max(100).default(50),
   offset: z.coerce.number().int().min(0).default(0),
 });

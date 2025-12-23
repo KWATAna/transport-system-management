@@ -4,7 +4,7 @@ import {
 } from "./interfaces/repositories.interface";
 import { VehicleDynamoDBRepository } from "./vehicles.repository";
 import { RouteDynamoDBRepository } from "./routes.repository";
-import { dynamoDbClient } from "../config/dynamodb.client";
+import { dynamoDbClient } from "../clients/dynamodb.client";
 
 export const createVehicleRepository = (): IVehicleRepository => {
   return new VehicleDynamoDBRepository(dynamoDbClient);

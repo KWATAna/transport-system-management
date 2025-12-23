@@ -2,6 +2,7 @@ import {
   DynamoDBClient,
   CreateTableCommand,
   CreateTableCommandInput,
+  DescribeTableCommand,
 } from "@aws-sdk/client-dynamodb";
 import * as dotenv from "dotenv";
 dotenv.config();
@@ -20,29 +21,15 @@ const createRoutesTableParams: CreateTableCommandInput = {
   KeySchema: [{ AttributeName: "id", KeyType: "HASH" }],
   AttributeDefinitions: [
     { AttributeName: "id", AttributeType: "S" },
-    { AttributeName: "vehicleId", AttributeType: "S" },
     { AttributeName: "status", AttributeType: "S" },
-    { AttributeName: "departureDate", AttributeType: "S" },
+    { AttributeName: "vehicleId", AttributeType: "S" },
     { AttributeName: "requiredTransportType", AttributeType: "S" },
   ],
   GlobalSecondaryIndexes: [
     {
-      IndexName: "VehicleIdIndex",
-      KeySchema: [
-        { AttributeName: "vehicleId", KeyType: "HASH" },
-        { AttributeName: "departureDate", KeyType: "RANGE" },
-      ],
-      Projection: { ProjectionType: "ALL" },
-      ProvisionedThroughput: { ReadCapacityUnits: 5, WriteCapacityUnits: 5 },
-    },
-    {
       IndexName: "StatusIndex",
-      KeySchema: [
-        { AttributeName: "status", KeyType: "HASH" },
-        { AttributeName: "departureDate", KeyType: "RANGE" },
-      ],
+      KeySchema: [{ AttributeName: "status", KeyType: "HASH" }],
       Projection: { ProjectionType: "ALL" },
-      ProvisionedThroughput: { ReadCapacityUnits: 5, WriteCapacityUnits: 5 },
     },
     {
       IndexName: "TransportTypeIndex",
@@ -51,7 +38,11 @@ const createRoutesTableParams: CreateTableCommandInput = {
         { AttributeName: "status", KeyType: "RANGE" },
       ],
       Projection: { ProjectionType: "ALL" },
-      ProvisionedThroughput: { ReadCapacityUnits: 5, WriteCapacityUnits: 5 },
+    },
+    {
+      IndexName: "VehicleIdIndex",
+      KeySchema: [{ AttributeName: "vehicleId", KeyType: "HASH" }],
+      Projection: { ProjectionType: "ALL" },
     },
   ],
   BillingMode: "PAY_PER_REQUEST",
@@ -65,6 +56,7 @@ const createVehiclesTableParams: CreateTableCommandInput = {
     { AttributeName: "id", AttributeType: "S" },
     { AttributeName: "status", AttributeType: "S" },
     { AttributeName: "transportType", AttributeType: "S" },
+    { AttributeName: "licensePlate", AttributeType: "S" },
   ],
   GlobalSecondaryIndexes: [
     {
@@ -74,11 +66,39 @@ const createVehiclesTableParams: CreateTableCommandInput = {
         { AttributeName: "transportType", KeyType: "RANGE" },
       ],
       Projection: { ProjectionType: "ALL" },
-      ProvisionedThroughput: { ReadCapacityUnits: 5, WriteCapacityUnits: 5 },
+    },
+    {
+      IndexName: "TransportTypeIndex",
+      KeySchema: [{ AttributeName: "transportType", KeyType: "HASH" }],
+      Projection: { ProjectionType: "ALL" },
+    },
+
+    {
+      IndexName: "LicensePlateIndex",
+      KeySchema: [{ AttributeName: "licensePlate", KeyType: "HASH" }],
+      Projection: { ProjectionType: "ALL" },
     },
   ],
   BillingMode: "PAY_PER_REQUEST",
 };
+
+async function assertTableDoesNotExist(
+  tableName: string | undefined
+): Promise<boolean> {
+  try {
+    await dynamoDBClient.send(
+      new DescribeTableCommand({
+        TableName: tableName,
+      })
+    );
+    return true;
+  } catch (error: unknown) {
+    if ((error as { name?: string }).name === "ResourceNotFoundException") {
+      return false;
+    }
+    throw error;
+  }
+}
 
 async function createTables() {
   try {
@@ -87,11 +107,23 @@ async function createTables() {
     const routesCommand = new CreateTableCommand(createRoutesTableParams);
     const vehiclesCommand = new CreateTableCommand(createVehiclesTableParams);
 
-    await dynamoDBClient.send(routesCommand);
-    console.log("Routes table created successfully");
+    const doesRouteExist = await assertTableDoesNotExist(
+      createRoutesTableParams.TableName
+    );
 
-    await dynamoDBClient.send(vehiclesCommand);
-    console.log("Vehicles table created successfully");
+    if (!doesRouteExist) {
+      await dynamoDBClient.send(routesCommand);
+      console.log("Routes table created successfully");
+    }
+
+    const doesVehcileExist = await assertTableDoesNotExist(
+      createVehiclesTableParams.TableName
+    );
+
+    if (!doesVehcileExist) {
+      await dynamoDBClient.send(vehiclesCommand);
+      console.log("Vehicles table created successfully");
+    }
   } catch (error) {
     console.error("Error creating tables:", error);
   }

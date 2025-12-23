@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { ListTablesCommand } from "@aws-sdk/client-dynamodb";
-import { dynamoDbClient } from "../config/dynamodb.client";
+import { dynamoDbClient } from "../clients/dynamodb.client";
 
 export class HealthController {
   checkHealth = async (
@@ -23,7 +23,9 @@ export class HealthController {
     }
   };
 
-  private async checkDatabaseConnection(): Promise<"connected" | "disconnected"> {
+  private async checkDatabaseConnection(): Promise<
+    "connected" | "disconnected"
+  > {
     try {
       await dynamoDbClient.send(new ListTablesCommand({ Limit: 1 }));
       return "connected";

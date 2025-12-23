@@ -3,10 +3,9 @@ import {
   PutCommand,
   GetCommand,
   ScanCommand,
-  UpdateCommand,
   DeleteCommand,
   QueryCommand,
-  TransactWriteCommand,
+  UpdateCommand,
 } from "@aws-sdk/lib-dynamodb";
 import { BaseDynamoDBRepository } from "./base/base.repository";
 import { IVehicleRepository } from "./interfaces/repositories.interface";
@@ -131,15 +130,12 @@ export class VehicleDynamoDBRepository
   async findByLicensePlate(
     licensePlate: string
   ): Promise<VehicleResponseDto | null> {
-    const command = new ScanCommand({
+    const command = new QueryCommand({
       TableName: this.tableName,
-      FilterExpression: "#licensePlate = :licensePlate",
-      ExpressionAttributeNames: {
-        "#licensePlate": "licensePlate",
-      },
-      ExpressionAttributeValues: {
-        ":licensePlate": licensePlate,
-      },
+      IndexName: "LicensePlateIndex",
+      KeyConditionExpression: "#licensePlate = :licensePlate",
+      ExpressionAttributeNames: { "#licensePlate": "licensePlate" },
+      ExpressionAttributeValues: { ":licensePlate": licensePlate },
     });
 
     const result = await this.dynamoDbClient.send(command);
@@ -217,6 +213,52 @@ export class VehicleDynamoDBRepository
         throw new ExternalApiError("Vehicle not found", "VEHICLE_NOT_FOUND");
       }
 
+      throw error;
+    }
+  }
+
+  async update(
+    id: string,
+    data: UpdateVehicleDto
+  ): Promise<VehicleResponseDto | null> {
+    const updateData = this.mapToDynamoDBItem(data);
+    updateData.updatedAt = new Date().toISOString();
+
+    const fields = Object.keys(updateData);
+    if (fields.length === 0) {
+      return this.findById(id);
+    }
+
+    const expressionAttributeNames: Record<string, string> = {};
+    const expressionAttributeValues: Record<string, any> = {};
+
+    const setClauses = fields.map((field) => {
+      expressionAttributeNames[`#${field}`] = field;
+      expressionAttributeValues[`:${field}`] = (updateData as any)[field];
+      return `#${field} = :${field}`;
+    });
+
+    const command = new UpdateCommand({
+      TableName: this.tableName,
+      Key: { id },
+      UpdateExpression: `SET ${setClauses.join(", ")}`,
+      ConditionExpression: "attribute_exists(id)",
+      ExpressionAttributeNames: expressionAttributeNames,
+      ExpressionAttributeValues: expressionAttributeValues,
+      ReturnValues: "ALL_NEW",
+    });
+
+    try {
+      const response = await this.dynamoDbClient.send(command);
+      return response.Attributes
+        ? this.mapToEntity(response.Attributes)
+        : null;
+    } catch (error: any) {
+      if (error.name === "ConditionalCheckFailedException") {
+        return null;
+      }
+
+      console.error("Error updating vehicle:", error);
       throw error;
     }
   }

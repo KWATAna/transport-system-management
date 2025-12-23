@@ -1,0 +1,316 @@
+{
+  "info": {
+    "_postman_id": "a9dbd9fb-4b21-4e13-9a3c-2f8650c7e0b5",
+    "name": "Transport System Management",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Collection for Transport System Management API. Set `baseUrl` (e.g. http://localhost:3000) and `apiKey` (x-api-key) in variables."
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "apiKey",
+      "value": "your-api-key"
+    },
+    {
+      "key": "routeId",
+      "value": "route-12345678"
+    },
+    {
+      "key": "vehicleId",
+      "value": "vehicle-12345678"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "GET /health",
+          "request": {
+            "method": "GET",
+            "description": "Returns service health status. No API key required.",
+            "header": [],
+            "url": "{{baseUrl}}/health"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Routes",
+      "item": [
+        {
+          "name": "GET /api/routes",
+          "request": {
+            "method": "GET",
+            "description": "List routes with optional filters. Query params: status, transportType, limit (default 50), offset (default 0). Requires x-api-key.",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/routes",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "routes"]
+            }
+          }
+        },
+        {
+          "name": "GET /api/routes/:id",
+          "request": {
+            "method": "GET",
+            "description": "Fetch a single route by id. If a vehicle is assigned, vehicle details are included. Requires x-api-key.",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/routes/{{routeId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "routes", "{{routeId}}"]
+            }
+          }
+        },
+        {
+          "name": "POST /api/routes/create",
+          "request": {
+            "method": "POST",
+            "description": "Create a new route. Required fields: startPoint {lat,lng}, endPoint {lat,lng}, departureDate (future ISO), requiredTransportType, expectedRevenue. Optional: status (default pending), completionDate, vehicleId. Requires x-api-key.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"startPoint\": { \"lat\": 50.45, \"lng\": 30.52, \"address\": \"Kyiv\" },\n  \"endPoint\": { \"lat\": 49.84, \"lng\": 24.03, \"address\": \"Lviv\" },\n  \"departureDate\": \"2025-01-01T10:00:00.000Z\",\n  \"requiredTransportType\": \"truck\",\n  \"expectedRevenue\": 12000,\n  \"status\": \"pending\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/routes/create",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "routes", "create"]
+            }
+          }
+        },
+        {
+          "name": "PUT /api/routes/:id",
+          "request": {
+            "method": "PUT",
+            "description": "Update a route. Supports status changes, revenue, completionDate, vehicleId (nullable to unassign). At least one field required. Requires x-api-key.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"completed\",\n  \"completionDate\": \"2025-01-10T12:00:00.000Z\",\n  \"actualRevenue\": 11800,\n  \"actualRevenueCurrency\": \"EUR\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/routes/{{routeId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "routes", "{{routeId}}"]
+            }
+          }
+        },
+        {
+          "name": "DELETE /api/routes/:id",
+          "request": {
+            "method": "DELETE",
+            "description": "Delete a route if it is not in-progress. If a vehicle is linked and the route is deletable, the vehicle is freed first. Requires x-api-key.",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/routes/{{routeId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "routes", "{{routeId}}"]
+            }
+          }
+        },
+        {
+          "name": "PUT /api/routes/:id/assign-vehicle",
+          "request": {
+            "method": "PUT",
+            "description": "Assign a vehicle to a pending route. Body expects vehicleId. Route status becomes in-progress and vehicle status assigned. Requires x-api-key.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vehicleId\": \"{{vehicleId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/routes/{{routeId}}/assign-vehicle",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "routes", "{{routeId}}", "assign-vehicle"]
+            }
+          }
+        },
+        {
+          "name": "PUT /api/routes/:id/unassign-vehicle",
+          "request": {
+            "method": "PUT",
+            "description": "Unassign vehicle from route. Send { \"vehicleId\": null }. Route status resets to pending and vehicle becomes available. Requires x-api-key.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"vehicleId\": null\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/routes/{{routeId}}/assign-vehicle",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "routes", "{{routeId}}", "assign-vehicle"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Vehicles",
+      "item": [
+        {
+          "name": "GET /api/vehicles",
+          "request": {
+            "method": "GET",
+            "description": "List vehicles. Optional filters: status, transportType. Requires x-api-key.",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicles"]
+            }
+          }
+        },
+        {
+          "name": "GET /api/vehicles/:id",
+          "request": {
+            "method": "GET",
+            "description": "Fetch vehicle by id. Requires x-api-key.",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles/{{vehicleId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicles", "{{vehicleId}}"]
+            }
+          }
+        },
+        {
+          "name": "POST /api/vehicles/create",
+          "request": {
+            "method": "POST",
+            "description": "Create a vehicle. Required: model, licensePlate, transportType, pricePerKmEUR, purchaseDate. Optional: id, status (default available), assigned (default false). Requires x-api-key.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"model\": \"DAF XF\",\n  \"licensePlate\": \"AA1234BB\",\n  \"transportType\": \"truck\",\n  \"status\": \"available\",\n  \"pricePerKmEUR\": 0.9,\n  \"purchaseDate\": \"2024-01-15T00:00:00.000Z\",\n  \"assigned\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles/create",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicles", "create"]
+            }
+          }
+        },
+        {
+          "name": "PUT /api/vehicles/:id",
+          "request": {
+            "method": "PUT",
+            "description": "Update vehicle details (e.g., status, pricePerKmEUR). Requires x-api-key.",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"available\",\n  \"pricePerKmEUR\": 1.05\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles/{{vehicleId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicles", "{{vehicleId}}"]
+            }
+          }
+        },
+        {
+          "name": "DELETE /api/vehicles/:id",
+          "request": {
+            "method": "DELETE",
+            "description": "Delete vehicle by id. Fails if assigned per business rules. Requires x-api-key.",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{apiKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/vehicles/{{vehicleId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vehicles", "{{vehicleId}}"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
