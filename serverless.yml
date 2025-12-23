@@ -9,11 +9,7 @@ provider:
   timeout: 30
 
   environment:
-    AWS_REGION: ${self:provider.region}
-
-    # Used ONLY locally
     AWS_DYNAMODB_ENDPOINT: ${self:custom.dynamodbEndpoint.${self:provider.stage}, ''}
-
     ROUTES_TABLE: Routes
     VEHICLES_TABLE: Vehicles
 
@@ -38,7 +34,7 @@ provider:
 
 functions:
   api:
-    handler: dist/lambda.handler
+    handler: src/lambda.handler
     events:
       - httpApi:
           path: /{proxy+}
@@ -50,11 +46,17 @@ plugins:
   - serverless-dotenv-plugin
 
 custom:
+  dotenv:
+    exclude:
+      - AWS_REGION
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+
   esbuild:
     bundle: true
     minify: false
     sourcemap: true
-    target: node18
+    target: node20
     platform: node
     external:
       - "@aws-sdk/*"
