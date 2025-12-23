@@ -1,4 +1,3 @@
-import "dotenv/config";
 import app from "./app";
 // TODO: Import database initialization
 // TODO: Import configuration

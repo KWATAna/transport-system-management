@@ -1,15 +1,11 @@
-import "dotenv/config";
+import "./config/env";
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
-import { config } from "dotenv";
 import { errorHandler } from "./api/middleware/error.middleware";
 import healthRoutes from "./api/routes/health.routes";
 import routesRoutes from "./api/routes/routes.router";
 import vehiclesRoutes from "./api/routes/vehicles.router";
-
-// Load environment variables
-config();
 
 const app = express();
 

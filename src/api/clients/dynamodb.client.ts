@@ -5,6 +5,7 @@ const clientConfig: DynamoDBClientConfig = {
   region: process.env.AWS_REGION || "eu-central-1",
 };
 
+console.log("DynamoDB Client Config:", clientConfig);
 if (process.env.AWS_DYNAMODB_ENDPOINT) {
   clientConfig.endpoint = process.env.AWS_DYNAMODB_ENDPOINT;
 }
