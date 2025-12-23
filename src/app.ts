@@ -6,6 +6,8 @@ import { errorHandler } from "./api/middleware/error.middleware";
 import healthRoutes from "./api/routes/health.routes";
 import routesRoutes from "./api/routes/routes.router";
 import vehiclesRoutes from "./api/routes/vehicles.router";
+import swaggerUi from "swagger-ui-express";
+import { swaggerSpec } from "./docs/swagger";
 
 const app = express();
 
@@ -14,6 +16,11 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.get("/docs.json", (_req, res) => {
+  res.json(swaggerSpec);
+});
 
 // Health check
 app.use("/health", healthRoutes);

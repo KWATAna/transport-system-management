@@ -32,6 +32,8 @@
     "helmet": "^8.1.0",
     "http-status-codes": "^2.3.0",
     "serverless-http": "^3.2.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
     "uuid": "^13.0.0",
     "zod": "^4.2.1"
   },
@@ -44,8 +46,8 @@
     "eslint": "^9.39.2",
     "nodemon": "^3.1.11",
     "serverless": "^3.38.0",
-    "serverless-esbuild": "^1.57.0",
     "serverless-dotenv-plugin": "^6.0.0",
+    "serverless-esbuild": "^1.57.0",
     "serverless-offline": "^13.3.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
