@@ -23,6 +23,21 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/health", healthRoutes);
 
 // API Routes
+app.use((req, _res, next) => {
+  if (Buffer.isBuffer(req.body)) {
+    const contentType = req.headers["content-type"] || "";
+
+    if (contentType.includes("application/json")) {
+      try {
+        req.body = JSON.parse(req.body.toString("utf-8"));
+      } catch (err) {
+        return next(err);
+      }
+    }
+  }
+  next();
+});
+
 app.use("/api/routes", routesRoutes);
 app.use("/api/vehicles", vehiclesRoutes);
 

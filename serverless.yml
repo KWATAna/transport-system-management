@@ -1,0 +1,152 @@
+service: transport-system-management
+frameworkVersion: "3"
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: ${opt:region, 'eu-central-1'}
+  stage: ${opt:stage, 'dev'}
+  timeout: 30
+
+  environment:
+    AWS_REGION: ${self:provider.region}
+
+    # Used ONLY locally
+    AWS_DYNAMODB_ENDPOINT: ${self:custom.dynamodbEndpoint.${self:provider.stage}, ''}
+
+    ROUTES_TABLE: Routes
+    VEHICLES_TABLE: Vehicles
+
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:DescribeTable
+            - dynamodb:PutItem
+            - dynamodb:GetItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:TransactWriteItems
+          Resource:
+            - !GetAtt RoutesTable.Arn
+            - !GetAtt VehiclesTable.Arn
+            - !Sub "${RoutesTable.Arn}/index/*"
+            - !Sub "${VehiclesTable.Arn}/index/*"
+
+functions:
+  api:
+    handler: dist/lambda.handler
+    events:
+      - httpApi:
+          path: /{proxy+}
+          method: ANY
+
+plugins:
+  - serverless-esbuild
+  - serverless-offline
+  - serverless-dotenv-plugin
+
+custom:
+  esbuild:
+    bundle: true
+    minify: false
+    sourcemap: true
+    target: node18
+    platform: node
+    external:
+      - "@aws-sdk/*"
+
+  # Only defined for local stage
+  dynamodbEndpoint:
+    local: http://localhost:8000
+
+resources:
+  Resources:
+    RoutesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Routes
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: status
+            AttributeType: S
+          - AttributeName: vehicleId
+            AttributeType: S
+          - AttributeName: requiredTransportType
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: StatusIndex
+            KeySchema:
+              - AttributeName: status
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+
+          - IndexName: TransportTypeIndex
+            KeySchema:
+              - AttributeName: requiredTransportType
+                KeyType: HASH
+              - AttributeName: status
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+
+          - IndexName: VehicleIdIndex
+            KeySchema:
+              - AttributeName: vehicleId
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+
+    VehiclesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Vehicles
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: status
+            AttributeType: S
+          - AttributeName: transportType
+            AttributeType: S
+          - AttributeName: licensePlate
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: StatusTypeIndex
+            KeySchema:
+              - AttributeName: status
+                KeyType: HASH
+              - AttributeName: transportType
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+
+          - IndexName: TransportTypeIndex
+            KeySchema:
+              - AttributeName: transportType
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+
+          - IndexName: LicensePlateIndex
+            KeySchema:
+              - AttributeName: licensePlate
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+
+  Outputs:
+    ApiEndpoint:
+      Value: !Sub "https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com"
