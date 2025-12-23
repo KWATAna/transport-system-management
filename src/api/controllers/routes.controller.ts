@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { IRouteService } from "../interfaces/services.interface";
-import { CreateRouteDto, UpdateRouteDto } from "../types/route.types";
+import { UpdateRouteDto } from "../types/route.types";
 import { StatusCodes } from "http-status-codes";
 import { ROUTE_STATUSES } from "../constants";
 import {
