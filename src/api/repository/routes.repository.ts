@@ -68,14 +68,51 @@ export class RouteDynamoDBRepository
     return item;
   }
 
-  async findAll(): Promise<RouteResponseDto[]> {
+  async findAll(filters?: any): Promise<RouteResponseDto[]> {
+    const appliedFilters = filters || {};
+    const limit =
+      typeof appliedFilters.limit === "number" &&
+      Number.isInteger(appliedFilters.limit) &&
+      appliedFilters.limit > 0
+        ? appliedFilters.limit
+        : undefined;
+    const offset =
+      typeof appliedFilters.offset === "number" &&
+      Number.isInteger(appliedFilters.offset) &&
+      appliedFilters.offset > 0
+        ? appliedFilters.offset
+        : 0;
+
     try {
+      if (appliedFilters.status) {
+        const command = new QueryCommand({
+          TableName: this.tableName,
+          IndexName: "StatusIndex",
+          KeyConditionExpression: "#status = :status",
+          ExpressionAttributeNames: {
+            "#status": "status",
+          },
+          ExpressionAttributeValues: {
+            ":status": appliedFilters.status,
+          },
+          Limit: limit ? limit + offset : undefined,
+        });
+
+        const response = await this.dynamoDbClient.send(command);
+        const items = response.Items || [];
+        const slicedItems = offset ? items.slice(offset) : items;
+        return slicedItems.map((item) => this.mapToEntity(item));
+      }
+
       const command = new ScanCommand({
         TableName: this.tableName,
+        Limit: limit ? limit + offset : undefined,
       });
 
       const response = await this.dynamoDbClient.send(command);
-      return response.Items?.map((item) => this.mapToEntity(item)) || [];
+      const items = response.Items || [];
+      const slicedItems = offset ? items.slice(offset) : items;
+      return slicedItems.map((item) => this.mapToEntity(item));
     } catch (error) {
       console.error("Error in findAll:", error);
       throw error;
@@ -361,47 +398,6 @@ export class RouteDynamoDBRepository
       return response.Items?.map((item) => this.mapToEntity(item)) || [];
     } catch (error) {
       console.error("Error getting active routes:", error);
-      throw error;
-    }
-  }
-
-  async updateStatus(
-    routeId: string,
-    status: "pending" | "assigned" | "in-progress" | "completed" | "cancelled"
-  ): Promise<RouteResponseDto | null> {
-    try {
-      const now = new Date().toISOString();
-      let updateExpression = "SET #status = :status, updatedAt = :updatedAt";
-      const expressionValues: any = {
-        ":status": status,
-        ":updatedAt": now,
-      };
-
-      if (status === "completed") {
-        updateExpression += ", completionDate = :completionDate";
-        expressionValues[":completionDate"] = now;
-      }
-
-      if (status === "completed") {
-        updateExpression += " REMOVE vehicleId";
-      }
-
-      const command = new UpdateCommand({
-        TableName: this.tableName,
-        Key: { id: routeId },
-        UpdateExpression: updateExpression,
-        ConditionExpression: "attribute_exists(id)",
-        ExpressionAttributeNames: {
-          "#status": "status",
-        },
-        ExpressionAttributeValues: expressionValues,
-        ReturnValues: "ALL_NEW",
-      });
-
-      const response = await this.dynamoDbClient.send(command);
-      return this.mapToEntity(response.Attributes);
-    } catch (error) {
-      console.error("Error updating route status:", error);
       throw error;
     }
   }

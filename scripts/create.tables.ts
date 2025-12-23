@@ -63,30 +63,16 @@ const createVehiclesTableParams: CreateTableCommandInput = {
   KeySchema: [{ AttributeName: "id", KeyType: "HASH" }],
   AttributeDefinitions: [
     { AttributeName: "id", AttributeType: "S" },
-    { AttributeName: "licensePlate", AttributeType: "S" },
     { AttributeName: "status", AttributeType: "S" },
     { AttributeName: "transportType", AttributeType: "S" },
-    { AttributeName: "currentRouteId", AttributeType: "S" },
   ],
   GlobalSecondaryIndexes: [
-    {
-      IndexName: "LicensePlateIndex",
-      KeySchema: [{ AttributeName: "licensePlate", KeyType: "HASH" }],
-      Projection: { ProjectionType: "ALL" },
-      ProvisionedThroughput: { ReadCapacityUnits: 5, WriteCapacityUnits: 5 },
-    },
     {
       IndexName: "StatusTypeIndex",
       KeySchema: [
         { AttributeName: "status", KeyType: "HASH" },
         { AttributeName: "transportType", KeyType: "RANGE" },
       ],
-      Projection: { ProjectionType: "ALL" },
-      ProvisionedThroughput: { ReadCapacityUnits: 5, WriteCapacityUnits: 5 },
-    },
-    {
-      IndexName: "CurrentRouteIndex",
-      KeySchema: [{ AttributeName: "currentRouteId", KeyType: "HASH" }],
       Projection: { ProjectionType: "ALL" },
       ProvisionedThroughput: { ReadCapacityUnits: 5, WriteCapacityUnits: 5 },
     },

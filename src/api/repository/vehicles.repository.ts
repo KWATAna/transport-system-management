@@ -44,6 +44,10 @@ export class VehicleDynamoDBRepository
     };
   }
 
+  private mapItemsToEntities(items?: any[]): VehicleResponseDto[] {
+    return items?.map((item) => this.mapToEntity(item)) || [];
+  }
+
   protected mapToDynamoDBItem(data: CreateVehicleDto | UpdateVehicleDto): any {
     const item: any = {};
     Object.entries(data).forEach(([key, value]) => {
@@ -54,14 +58,60 @@ export class VehicleDynamoDBRepository
     return item;
   }
 
-  async findAll(): Promise<VehicleResponseDto[]> {
+  async findAll(filters?: any): Promise<VehicleResponseDto[]> {
+    const appliedFilters = filters || {};
+
     try {
+      if (appliedFilters.status) {
+        const expressionAttributeNames: Record<string, string> = {
+          "#status": "status",
+        };
+        const expressionAttributeValues: Record<string, any> = {
+          ":status": appliedFilters.status,
+        };
+        let keyConditionExpression = "#status = :status";
+
+        if (appliedFilters.transportType) {
+          expressionAttributeNames["#transportType"] = "transportType";
+          expressionAttributeValues[":transportType"] =
+            appliedFilters.transportType;
+          keyConditionExpression += " AND #transportType = :transportType";
+        }
+
+        const command = new QueryCommand({
+          TableName: this.tableName,
+          IndexName: "StatusTypeIndex",
+          KeyConditionExpression: keyConditionExpression,
+          ExpressionAttributeNames: expressionAttributeNames,
+          ExpressionAttributeValues: expressionAttributeValues,
+        });
+
+        const response = await this.dynamoDbClient.send(command);
+        return this.mapItemsToEntities(response.Items);
+      }
+
+      if (appliedFilters.transportType) {
+        const command = new ScanCommand({
+          TableName: this.tableName,
+          FilterExpression: "#transportType = :transportType",
+          ExpressionAttributeNames: {
+            "#transportType": "transportType",
+          },
+          ExpressionAttributeValues: {
+            ":transportType": appliedFilters.transportType,
+          },
+        });
+
+        const response = await this.dynamoDbClient.send(command);
+        return this.mapItemsToEntities(response.Items);
+      }
+
       const command = new ScanCommand({
         TableName: this.tableName,
       });
 
       const response = await this.dynamoDbClient.send(command);
-      return response.Items?.map((item) => this.mapToEntity(item)) || [];
+      return this.mapItemsToEntities(response.Items);
     } catch (error) {
       console.error("Error in findAll:", error);
       throw error;
@@ -69,35 +119,27 @@ export class VehicleDynamoDBRepository
   }
 
   async findByStatus(status: string): Promise<VehicleResponseDto[]> {
-    // TODO: Implement GSI query for status
-    console.log("TODO: Implement findByStatus with status:", status);
-    return [];
+    return this.findAll({ status });
   }
 
   async findByTransportType(
     transportType: string
   ): Promise<VehicleResponseDto[]> {
-    // TODO: Implement GSI query for transportType
-    console.log(
-      "TODO: Implement findByTransportType with type:",
-      transportType
-    );
-    return [];
+    return this.findAll({ transportType });
   }
 
   async findByLicensePlate(
     licensePlate: string
   ): Promise<VehicleResponseDto | null> {
-    const command = new QueryCommand({
+    const command = new ScanCommand({
       TableName: this.tableName,
-      IndexName: "LicensePlateIndex",
-
-      KeyConditionExpression: "licensePlate = :licensePlate",
+      FilterExpression: "#licensePlate = :licensePlate",
+      ExpressionAttributeNames: {
+        "#licensePlate": "licensePlate",
+      },
       ExpressionAttributeValues: {
         ":licensePlate": licensePlate,
       },
-
-      Limit: 1,
     });
 
     const result = await this.dynamoDbClient.send(command);

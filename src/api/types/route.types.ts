@@ -1,3 +1,5 @@
+import { VehicleResponseDto } from "./vehicle.types";
+
 export interface Coordinate {
   lat: number;
   lng: number;
@@ -43,6 +45,7 @@ export interface RouteResponseDto {
   actualRevenueCurrency?: string;
   status: string;
   vehicleId?: string;
+  vehicle?: VehicleResponseDto;
   createdAt: string;
   updatedAt: string;
 }

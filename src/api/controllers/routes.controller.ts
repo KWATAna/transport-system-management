@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { IRouteService } from "../interfaces/services.interface";
 import { CreateRouteDto, UpdateRouteDto } from "../types/route.types";
 import { StatusCodes } from "http-status-codes";
+import { ROUTE_STATUSES } from "../constants";
 import {
   createRouteSchema,
   routeQuerySchema,
@@ -113,7 +114,13 @@ export class RoutesController {
     try {
       const { id } = req.params;
 
-      const deleted = await this.routeService.delete(id);
+      const route = await this.routeService.getById(id);
+
+      if (route.vehicleId && route.status !== ROUTE_STATUSES.IN_PROGRESS) {
+        await this.routeService.assignVehicle(id, null);
+      }
+
+      await this.routeService.delete(id);
 
       res.status(StatusCodes.OK).json({
         success: true,

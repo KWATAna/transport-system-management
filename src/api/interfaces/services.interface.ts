@@ -42,7 +42,4 @@ export interface IRouteService
 }
 
 export interface IVehicleService
-  extends IService<VehicleResponseDto, CreateVehicleDto, UpdateVehicleDto> {
-  getAvailableVehicles(transportType?: string): Promise<VehicleResponseDto[]>;
-  updateStatus(id: string, status: string): Promise<VehicleResponseDto>;
-}
+  extends IService<VehicleResponseDto, CreateVehicleDto, UpdateVehicleDto> {}

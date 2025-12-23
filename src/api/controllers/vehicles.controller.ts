@@ -12,13 +12,7 @@ export class VehiclesController {
     next: NextFunction
   ): Promise<void> => {
     try {
-      const { status, transportType } = req.query;
-
-      const filters: any = {};
-      if (status) filters.status = status as string;
-      if (transportType) filters.transportType = transportType as string;
-
-      const vehicles = await this.vehicleService.getAll(filters);
+      const vehicles = await this.vehicleService.getAll(req.query);
 
       res.status(200).json({
         success: true,

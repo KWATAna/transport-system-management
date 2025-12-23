@@ -68,11 +68,38 @@ export class RouteService implements IRouteService {
       throw new RouteNotFoundError(id);
     }
 
-    return route;
+    if (!route.vehicleId) {
+      return route;
+    }
+
+    const vehicle = await this.vehicleRepository.findById(route.vehicleId);
+
+    if (!vehicle) {
+      throw new VehicleNotFoundError(route.vehicleId);
+    }
+
+    return {
+      ...route,
+      vehicle,
+    };
   }
 
   async getAll(filters?: any): Promise<RouteResponseDto[]> {
-    return this.routeRepository.findAll(filters);
+    const { status, limit, offset } = filters || {};
+
+    const parsedFilters = {
+      status: typeof status === "string" ? status : undefined,
+      limit:
+        typeof limit === "number" && Number.isInteger(limit)
+          ? limit
+          : undefined,
+      offset:
+        typeof offset === "number" && Number.isInteger(offset)
+          ? offset
+          : undefined,
+    };
+
+    return this.routeRepository.findAll(parsedFilters);
   }
 
   async update(id: string, data: UpdateRouteDto): Promise<RouteResponseDto> {
@@ -135,8 +162,7 @@ export class RouteService implements IRouteService {
     routeId: string,
     vehicleId: string | null
   ): Promise<RouteResponseDto> {
-    // TODO: Validate route and vehicle
-    const route = await this.getById(routeId);
+    await this.getById(routeId);
 
     if (vehicleId) {
       const vehicle = await this.vehicleRepository.findById(vehicleId);

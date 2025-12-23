@@ -36,7 +36,15 @@ export class VehicleService implements IVehicleService {
   }
 
   async getAll(filters?: any): Promise<VehicleResponseDto[]> {
-    return this.vehicleRepository.findAll(filters);
+    const { status, transportType } = filters || {};
+
+    const parsedFilters = {
+      status: typeof status === "string" ? status : undefined,
+      transportType:
+        typeof transportType === "string" ? transportType : undefined,
+    };
+
+    return this.vehicleRepository.findAll(parsedFilters);
   }
 
   async update(
@@ -69,26 +77,5 @@ export class VehicleService implements IVehicleService {
     }
 
     await this.vehicleRepository.delete(id);
-  }
-
-  async getAvailableVehicles(
-    transportType?: string
-  ): Promise<VehicleResponseDto[]> {
-    // Get all FREE vehicles
-    // TODO fix this in repository
-    const freeVehicles = await this.vehicleRepository.findByStatus("FREE");
-
-    // Filter by transport type if specified
-    if (transportType) {
-      return freeVehicles.filter(
-        (vehicle) => vehicle.transportType === transportType
-      );
-    }
-
-    return freeVehicles;
-  }
-
-  async updateStatus(id: string, status: string): Promise<VehicleResponseDto> {
-    return this.update(id, { status });
   }
 }

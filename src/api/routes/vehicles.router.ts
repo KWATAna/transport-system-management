@@ -5,7 +5,6 @@ import { createVehicleRepository } from "../repository/repository.provider";
 import { validateBody } from "../middleware/validation.middleware";
 import { apiKeyMiddleware } from "../middleware/api-key.middleware";
 import { createVehicleSchema } from "../validation/vehicle.schema";
-// TODO: Add validation middleware
 
 const vehicleRepository = createVehicleRepository();
 const vehicleService = new VehicleService(vehicleRepository);
