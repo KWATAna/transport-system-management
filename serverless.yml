@@ -9,7 +9,8 @@ provider:
   timeout: 30
 
   environment:
-    AWS_DYNAMODB_ENDPOINT: ${self:custom.dynamodbEndpoint.${self:provider.stage}, ''}
+    AWS_DYNAMODB_ENDPOINT: ${self:custom.dynamodbEndpoint.${self:provider.stage}, null}
+
     ROUTES_TABLE: Routes
     VEHICLES_TABLE: Vehicles
 
@@ -19,6 +20,7 @@ provider:
         - Effect: Allow
           Action:
             - dynamodb:DescribeTable
+            - dynamodb:ListTables
             - dynamodb:PutItem
             - dynamodb:GetItem
             - dynamodb:UpdateItem
@@ -46,7 +48,9 @@ plugins:
   - serverless-dotenv-plugin
 
 custom:
+  # Ensure dotenv NEVER injects AWS-reserved variables
   dotenv:
+    path: .env.${opt:stage, 'dev'}
     exclude:
       - AWS_REGION
       - AWS_ACCESS_KEY_ID
@@ -61,7 +65,7 @@ custom:
     external:
       - "@aws-sdk/*"
 
-  # Only defined for local stage
+  # Local-only DynamoDB endpoint
   dynamodbEndpoint:
     local: http://localhost:8000
 

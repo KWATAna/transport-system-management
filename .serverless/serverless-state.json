@@ -11,12 +11,12 @@
       "stage": "dev",
       "timeout": 30,
       "environment": {
-        "AWS_DYNAMODB_ENDPOINT": "http://localhost:8000",
         "ROUTES_TABLE": "Routes",
         "VEHICLES_TABLE": "Vehicles",
         "DB_PROVIDER": "dynamodb",
         "FIXER_API_KEY": "5196cdbcfaf9832eea5a76baa9ae6f77",
-        "API_KEY": "4smpdvxfo1FmIRo96v33SbLhy6t0/6wnA1rEx19pzm4="
+        "API_KEY": "4smpdvxfo1FmIRo96v33SbLhy6t0/6wnA1rEx19pzm4=",
+        "AWS_DYNAMODB_ENDPOINT": null
       },
       "iam": {
         "role": {
@@ -25,6 +25,7 @@
               "Effect": "Allow",
               "Action": [
                 "dynamodb:DescribeTable",
+                "dynamodb:ListTables",
                 "dynamodb:PutItem",
                 "dynamodb:GetItem",
                 "dynamodb:UpdateItem",
@@ -225,7 +226,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/transport-system-management/dev/1766506463856-2025-12-23T16:14:23.856Z/transport-system-management.zip"
+                "S3Key": "serverless/transport-system-management/dev/1766513176604-2025-12-23T18:06:16.604Z/transport-system-management.zip"
               },
               "Handler": "src/lambda.handler",
               "Runtime": "nodejs20.x",
@@ -234,7 +235,6 @@
               "Timeout": 30,
               "Environment": {
                 "Variables": {
-                  "AWS_DYNAMODB_ENDPOINT": "http://localhost:8000",
                   "ROUTES_TABLE": "Routes",
                   "VEHICLES_TABLE": "Vehicles",
                   "DB_PROVIDER": "dynamodb",
@@ -253,14 +253,14 @@
               "ApiLogGroup"
             ]
           },
-          "ApiLambdaVersionzUO6uBpuLy4lThuqQBbjA4BiqTzsJLISfv1CMp88": {
+          "ApiLambdaVersionOSf3gxnvpQiFxzlY2nYeOGrmIGi1WzQpPXDySEFlUNs": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "ApiLambdaFunction"
               },
-              "CodeSha256": "u6PAKVmnf53xh3kQzhyQHbdqzFbQqwmIzsSYat9T0jQ="
+              "CodeSha256": "Ueqr52cuXivlUFWQGacXnTYw3DTItwEDx+WTqr647GY="
             }
           },
           "HttpApi": {
@@ -514,7 +514,7 @@
           "ApiLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "ApiLambdaVersionzUO6uBpuLy4lThuqQBbjA4BiqTzsJLISfv1CMp88"
+              "Ref": "ApiLambdaVersionOSf3gxnvpQiFxzlY2nYeOGrmIGi1WzQpPXDySEFlUNs"
             },
             "Export": {
               "Name": "sls-transport-system-management-dev-ApiLambdaFunctionQualifiedArn"
@@ -647,6 +647,7 @@
     },
     "custom": {
       "dotenv": {
+        "path": ".env.dev",
         "exclude": [
           "AWS_REGION",
           "AWS_ACCESS_KEY_ID",
@@ -692,7 +693,7 @@
         "timeout": 30,
         "runtime": "nodejs20.x",
         "vpc": {},
-        "versionLogicalId": "ApiLambdaVersionzUO6uBpuLy4lThuqQBbjA4BiqTzsJLISfv1CMp88"
+        "versionLogicalId": "ApiLambdaVersionOSf3gxnvpQiFxzlY2nYeOGrmIGi1WzQpPXDySEFlUNs"
       }
     },
     "resources": {
@@ -877,7 +878,7 @@
     "isDashboardMonitoringPreconfigured": false
   },
   "package": {
-    "artifactDirectoryName": "serverless/transport-system-management/dev/1766506463856-2025-12-23T16:14:23.856Z",
+    "artifactDirectoryName": "serverless/transport-system-management/dev/1766513176604-2025-12-23T18:06:16.604Z",
     "artifact": "transport-system-management.zip"
   }
 }
