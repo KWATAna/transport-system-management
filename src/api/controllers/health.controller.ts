@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { ListTablesCommand } from "@aws-sdk/client-dynamodb";
+import { GetItemCommand } from "@aws-sdk/client-dynamodb";
 import { dynamoDbClient } from "../clients/dynamodb.client";
 
 export class HealthController {
@@ -27,7 +27,14 @@ export class HealthController {
     "connected" | "disconnected"
   > {
     try {
-      await dynamoDbClient.send(new ListTablesCommand({ Limit: 1 }));
+      await dynamoDbClient.send(
+        new GetItemCommand({
+          TableName: process.env.ROUTES_TABLE!,
+          Key: {
+            id: { S: "__healthcheck__" },
+          },
+        })
+      );
       return "connected";
     } catch (error) {
       console.error("DynamoDB health check failed:", error);
