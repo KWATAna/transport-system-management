@@ -51,7 +51,6 @@ export class ExternalApiError extends ApiError {
   }
 }
 
-// src/core/errors/database.error.ts
 export class DatabaseError extends ApiError {
   constructor(operation: string, details?: any) {
     super(`Database error during ${operation}`, 500, "DATABASE_ERROR", details);

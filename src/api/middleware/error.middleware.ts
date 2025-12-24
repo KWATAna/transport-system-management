@@ -1,4 +1,3 @@
-// src/shared/middleware/error.middleware.ts
 import { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
 import { ZodError } from "zod";
@@ -10,6 +9,14 @@ export const errorHandler = (
   res: Response,
   next: NextFunction
 ): void => {
+  // added logs for debugging purposes
+  console.error("[Error]", req.method, req.originalUrl, {
+    name: error.name,
+    message: error.message,
+    stack: error.stack,
+    details: (error as any).details ?? undefined,
+  });
+
   if (error instanceof ApiError) {
     res.status(error.statusCode).json({
       success: false,

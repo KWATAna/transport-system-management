@@ -54,7 +54,7 @@ This script (`scripts/seed.api.ts`) uses the public endpoints to create vehicles
 ## Serverless Offline
 Optional: run the Lambda handler locally with Serverless.
 ```sh
-npx serverless offline --stage dev
+npx serverless offline --stage local
 ```
 `serverless-dotenv-plugin` loads `.env.dev` for `--stage dev`; override with `--stage local` or set `DOTENV_CONFIG_PATH` if needed.
 

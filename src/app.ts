@@ -30,7 +30,7 @@ app.use((req, _res, next) => {
   if (Buffer.isBuffer(req.body)) {
     const contentType = req.headers["content-type"] || "";
 
-    if (contentType.includes("application/json")) {
+    if (contentType.includes("application/json") && req.body.length > 0) {
       try {
         req.body = JSON.parse(req.body.toString("utf-8"));
       } catch (err) {

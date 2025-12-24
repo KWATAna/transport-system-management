@@ -160,17 +160,12 @@ async function seedRoutes(): Promise<string[]> {
   return ids;
 }
 
-async function assignVehicles(routeIds: string[], vehicleIds: string[]) {
-  console.log("Skipping vehicle assignments (left unassigned).");
-}
-
 async function main() {
   console.log(`Seeding via API at ${API_BASE_URL}`);
   const vehicleIds = await seedVehicles();
   const routeIds = await seedRoutes();
-  if (vehicleIds.length && routeIds.length) {
-    await assignVehicles(routeIds, vehicleIds);
-  } else {
+
+  if (!vehicleIds.length || !routeIds.length) {
     console.warn(
       "Skipping assignments because vehicles or routes were not created."
     );
