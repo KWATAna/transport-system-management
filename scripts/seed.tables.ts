@@ -18,11 +18,12 @@ interface RouteSeed {
   completionDate?: string;
   requiredTransportType: string;
   expectedRevenue: number;
+  expectedRevenueUSD: number;
+  expectedRevenueUAH: number;
+  distance: number;
   revenueCurrency: string;
   status: string;
   vehicleId?: string;
-  actualRevenue?: number;
-  actualRevenueCurrency?: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -155,7 +156,6 @@ const generateRoutes = (
     let status: string;
     let vehicleId: string | undefined;
     let completionDate: string | undefined;
-    let actualRevenue: number | undefined;
 
     if (statusRand < 0.25) {
       status = "completed";
@@ -164,7 +164,6 @@ const generateRoutes = (
         departureDate.getDate() + Math.floor(Math.random() * 5) + 1
       );
       completionDate = completion.toISOString();
-      actualRevenue = Math.round(Math.random() * 500) + 500;
     } else if (statusRand < 0.5) {
       status = "in-progress";
 
@@ -182,6 +181,11 @@ const generateRoutes = (
     const requiredTransportType =
       transportTypes[Math.floor(Math.random() * transportTypes.length)];
 
+    const distanceKm = Math.round(Math.random() * 1800) + 100; // 100-1900 km
+    const expectedRevenueEUR = Math.round(Math.random() * 2000) + 500;
+    const expectedRevenueUSD = Math.round(expectedRevenueEUR * 1.08 * 100) / 100; // simple mock conversion
+    const expectedRevenueUAH = Math.round(expectedRevenueEUR * 40 * 100) / 100; // simple mock conversion
+
     const route: RouteSeed = {
       id: generateRouteId(),
       startPoint: {
@@ -197,10 +201,11 @@ const generateRoutes = (
       departureDate: departureDate.toISOString(),
       completionDate,
       requiredTransportType,
-      expectedRevenue: Math.round(Math.random() * 2000) + 500,
+      distance: distanceKm,
+      expectedRevenue: expectedRevenueEUR,
+      expectedRevenueUSD,
+      expectedRevenueUAH,
       revenueCurrency: "EUR",
-      actualRevenue,
-      actualRevenueCurrency: actualRevenue ? "EUR" : undefined,
       status,
       vehicleId,
       createdAt: new Date().toISOString(),

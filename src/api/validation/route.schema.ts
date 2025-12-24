@@ -22,7 +22,7 @@ export const RouteStatus = z.enum([
 
 export const TransportType = z.enum(["truck", "van", "car", "refrigerated"]);
 
-export const Currency = z.enum(["EUR", "USD", "UAH"]);
+export const Currency = z.enum(["EUR"]);
 
 const routeIdRegex = /^route-[0-9a-f]{8}$/;
 const vehicleIdRegex = /^vehicle-[0-9a-f]{8}$/;
@@ -66,14 +66,6 @@ export const createRouteSchema = z
 
     revenueCurrency: Currency.default("EUR"),
 
-    actualRevenue: z
-      .number()
-      .positive("Actual revenue must be positive")
-      .max(1000000, "Actual revenue is too high")
-      .optional(),
-
-    actualRevenueCurrency: Currency.optional(),
-
     vehicleId: z
       .string()
       .regex(vehicleIdRegex, "Invalid vehicle ID format")
@@ -95,25 +87,15 @@ export const createRouteSchema = z
       path: ["completionDate"],
     }
   )
-  .refine(
-    (data) => {
-      if (data.actualRevenue && !data.actualRevenueCurrency) {
-        return false;
-      }
-      return true;
-    },
-    {
-      message:
-        "Actual revenue currency is required when actual revenue is provided",
-      path: ["actualRevenueCurrency"],
-    }
-  );
+  ;
 
 export const updateRouteSchema = createRouteSchema
   .partial()
   .extend({
     status: RouteStatus.optional(),
     id: z.string().regex(routeIdRegex, "Invalid route ID format").optional(),
+    revenueCurrency: z.undefined(),
+    expectedRevenue: z.undefined(),
     vehicleId: z
       .string()
       .regex(vehicleIdRegex, "Invalid vehicle ID format")

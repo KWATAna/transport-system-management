@@ -43,3 +43,13 @@ export class RouteDistanceCalculationError extends ApiError {
     this.name = "RouteDistanceCalculationError";
   }
 }
+
+export class RequiredTransportTypeChangeNotAllowedError extends ValidationError {
+  constructor(vehicleId: string) {
+    super(
+      "Cannot change required transport type while a vehicle is assigned",
+      { vehicleId }
+    );
+    this.name = "RequiredTransportTypeChangeNotAllowedError";
+  }
+}

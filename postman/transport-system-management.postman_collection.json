@@ -124,7 +124,7 @@
           "name": "PUT /api/routes/:id",
           "request": {
             "method": "PUT",
-            "description": "Update a route. Supports status changes, revenue, completionDate, vehicleId (nullable to unassign). At least one field required. Requires X-API-Key.",
+            "description": "Update a route. Supports status changes, completionDate, vehicleId (nullable to unassign), notes, requiredTransportType (only when no vehicle is assigned). `expectedRevenue` and `revenueCurrency` are not allowed on update (currency is fixed to EUR). At least one field required. Requires X-API-Key.",
             "header": [
               {
                 "key": "Content-Type",
@@ -137,7 +137,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"completionDate\": \"2025-01-10T12:00:00.000Z\",\n  \"actualRevenue\": 11800,\n  \"actualRevenueCurrency\": \"EUR\"\n}"
+              "raw": "{\n  \"status\": \"completed\",\n  \"completionDate\": \"2025-01-10T12:00:00.000Z\",\n  \"notes\": \"Delivery confirmed\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/routes/{{routeId}}",

@@ -226,7 +226,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/transport-system-management/dev/1766561066018-2025-12-24T07:24:26.018Z/transport-system-management.zip"
+                "S3Key": "serverless/transport-system-management/dev/1766567147145-2025-12-24T09:05:47.145Z/transport-system-management.zip"
               },
               "Handler": "src/lambda.handler",
               "Runtime": "nodejs20.x",
@@ -253,14 +253,14 @@
               "ApiLogGroup"
             ]
           },
-          "ApiLambdaVersionR7ZMP1c0RJRr44jDPZOQI84Jp6Up9uGx4B9B6MZGwY": {
+          "ApiLambdaVersionbprn4msfWiXu7gvimgMBtZ7nEtmwuVO0as8oiO6Yb4": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "ApiLambdaFunction"
               },
-              "CodeSha256": "4+bj8+hVCktS6V+UOAAPAV3wOmRlE+RqhCZL5nSf/GA="
+              "CodeSha256": "BLbNyX1PrW9xUpOzYwNXtl4xqFh6+6kmPbXAhUo0YmE="
             }
           },
           "HttpApi": {
@@ -514,7 +514,7 @@
           "ApiLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "ApiLambdaVersionR7ZMP1c0RJRr44jDPZOQI84Jp6Up9uGx4B9B6MZGwY"
+              "Ref": "ApiLambdaVersionbprn4msfWiXu7gvimgMBtZ7nEtmwuVO0as8oiO6Yb4"
             },
             "Export": {
               "Name": "sls-transport-system-management-dev-ApiLambdaFunctionQualifiedArn"
@@ -693,7 +693,7 @@
         "timeout": 30,
         "runtime": "nodejs20.x",
         "vpc": {},
-        "versionLogicalId": "ApiLambdaVersionR7ZMP1c0RJRr44jDPZOQI84Jp6Up9uGx4B9B6MZGwY"
+        "versionLogicalId": "ApiLambdaVersionbprn4msfWiXu7gvimgMBtZ7nEtmwuVO0as8oiO6Yb4"
       }
     },
     "resources": {
@@ -878,7 +878,7 @@
     "isDashboardMonitoringPreconfigured": false
   },
   "package": {
-    "artifactDirectoryName": "serverless/transport-system-management/dev/1766561066018-2025-12-24T07:24:26.018Z",
+    "artifactDirectoryName": "serverless/transport-system-management/dev/1766567147145-2025-12-24T09:05:47.145Z",
     "artifact": "transport-system-management.zip"
   }
 }

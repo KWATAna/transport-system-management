@@ -65,14 +65,7 @@ const swaggerDefinition = {
           expectedRevenue: { type: "number", example: 1250 },
           revenueCurrency: {
             type: "string",
-            enum: ["EUR", "USD", "UAH"],
-            example: "EUR",
-          },
-          actualRevenue: { type: "number", nullable: true, example: 1400 },
-          actualRevenueCurrency: {
-            type: "string",
-            enum: ["EUR", "USD", "UAH"],
-            nullable: true,
+            enum: ["EUR"],
             example: "EUR",
           },
           status: {
@@ -152,14 +145,7 @@ const swaggerDefinition = {
           expectedRevenue: { type: "number", example: 850 },
           revenueCurrency: {
             type: "string",
-            enum: ["EUR", "USD", "UAH"],
-            example: "EUR",
-          },
-          actualRevenue: { type: "number", nullable: true, example: 900 },
-          actualRevenueCurrency: {
-            type: "string",
-            enum: ["EUR", "USD", "UAH"],
-            nullable: true,
+            enum: ["EUR"],
             example: "EUR",
           },
           status: {
@@ -454,11 +440,9 @@ const swaggerDefinition = {
               schema: { $ref: "#/components/schemas/RouteInput" },
               examples: {
                 updateStatus: {
-                  summary: "Зміна статусу та фактичного доходу",
+                  summary: "Зміна статусу маршруту",
                   value: {
-                    status: "in-progress",
-                    actualRevenue: 1200,
-                    actualRevenueCurrency: "EUR",
+                    status: "in-progress"
                   },
                 },
               },

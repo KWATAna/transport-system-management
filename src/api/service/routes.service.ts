@@ -15,6 +15,7 @@ import {
   RouteNotFoundError,
   VehicleNotAvailableError,
   InvalidRouteStatusTransitionError,
+  RequiredTransportTypeChangeNotAllowedError,
 } from "../errors/routes.errors";
 import { VehicleNotFoundError } from "../errors/vehicles.errors";
 
@@ -112,6 +113,16 @@ export class RouteService implements IRouteService {
   async update(id: string, data: UpdateRouteDto): Promise<RouteResponseDto> {
     const existingRoute = await this.getById(id);
 
+    if (
+      existingRoute.vehicleId &&
+      data.requiredTransportType &&
+      data.requiredTransportType !== existingRoute.requiredTransportType
+    ) {
+      throw new RequiredTransportTypeChangeNotAllowedError(
+        existingRoute.vehicleId
+      );
+    }
+
     if (data.status) {
       if (
         existingRoute.status === ROUTE_STATUSES.IN_PROGRESS &&
@@ -129,6 +140,23 @@ export class RouteService implements IRouteService {
 
     if (vehicleId !== undefined) {
       routeAfterVehicleChange = await this.assignVehicle(id, vehicleId);
+    }
+
+    const startPointChanged = data.startPoint !== undefined;
+    const endPointChanged = data.endPoint !== undefined;
+
+    if (startPointChanged || endPointChanged) {
+      const nextStartPoint = data.startPoint ?? existingRoute.startPoint;
+      const nextEndPoint = data.endPoint ?? existingRoute.endPoint;
+
+      const routeInfo = await this.geolocationService.calculateRouteDistance([
+        nextStartPoint,
+        nextEndPoint,
+      ]);
+
+      routeUpdates.startPoint = nextStartPoint;
+      routeUpdates.endPoint = nextEndPoint;
+      routeUpdates.distance = routeInfo.distance;
     }
 
     const hasOtherUpdates = Object.values(routeUpdates).some(

@@ -19,13 +19,14 @@ export interface CreateRouteDto {
 
 export interface UpdateRouteDto {
   status?: "pending" | "assigned" | "in-progress" | "completed" | "cancelled";
-  expectedRevenue?: number;
   revenueCurrency?: string;
+  startPoint?: Coordinate;
+  endPoint?: Coordinate;
+  distance?: number;
+  requiredTransportType?: string; // TODO: Use TransportType enum
   vehicleId?: string | null;
   departureDate?: string;
   completionDate?: string;
-  actualRevenue?: number;
-  actualRevenueCurrency?: string;
   notes?: string;
 }
 
@@ -41,8 +42,6 @@ export interface RouteResponseDto {
   expectedRevenueUAH: number;
   expectedRevenueUSD: number;
   revenueCurrency: string;
-  actualRevenue?: number;
-  actualRevenueCurrency?: string;
   status: string;
   vehicleId?: string;
   vehicle?: VehicleResponseDto;
