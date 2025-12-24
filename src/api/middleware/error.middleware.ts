@@ -10,8 +10,6 @@ export const errorHandler = (
   res: Response,
   next: NextFunction
 ): void => {
-  console.error("Error:", error);
-
   if (error instanceof ApiError) {
     res.status(error.statusCode).json({
       success: false,
@@ -19,6 +17,16 @@ export const errorHandler = (
       code: error.code,
       details: error.details,
       timestamp: error.timestamp,
+    });
+    return;
+  }
+
+  // invalid JSON payload error from express.json()
+  if ((error as any).type === "entity.parse.failed") {
+    res.status(StatusCodes.BAD_REQUEST).json({
+      success: false,
+      error: "Invalid JSON payload",
+      details: error.message,
     });
     return;
   }
