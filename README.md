@@ -27,6 +27,7 @@ Node/Express service that talks to DynamoDB. Designed for local development with
    - `AWS_DYNAMODB_ENDPOINT` (for local: `http://localhost:8000`)
    - `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` (any non-empty strings for local)
    - `FIXER_API_KEY`, `API_KEY` (app-level keys)
+   - `API_BASE_URL` (required for API seeding; e.g. `http://localhost:3000` or your deployed URL)
 3) Stage-specific files like `.env.dev` are picked up when `STAGE=dev` is set; production relies on real environment variables passed by the platform (no files loaded in Lambda unless you override `DOTENV_CONFIG_PATH`).
 
 ## Setup & Local Run
@@ -51,12 +52,32 @@ API_BASE_URL="https://your-api.example.com" API_KEY="your-key" npm run seed-api:
 ```
 This script (`scripts/seed.api.ts`) uses the public endpoints to create vehicles/routes and assigns some vehicles to routes so revenue conversions are stored.
 
+To seed against a local/offline API using your `.env.local` values:
+```sh
+SLS_ENV=local DOTENV_CONFIG_PATH=.env.local npx ts-node scripts/seed.api.ts
+```
+Ensure `API_BASE_URL` and `API_KEY` are set in `.env.local` (or export them inline) to point at the running instance you want to populate.
+
 ## Serverless Offline
 Optional: run the Lambda handler locally with Serverless.
 ```sh
 npx serverless offline --stage local
 ```
 `serverless-dotenv-plugin` loads `.env.dev` for `--stage dev`; override with `--stage local` or set `DOTENV_CONFIG_PATH` if needed.
+
+## API Endpoints
+- `GET /health` — service status.
+- `GET /api/routes` — list routes (filters: status, transportType, limit, offset).
+- `GET /api/routes/:id` — route details (includes vehicle when assigned).
+- `POST /api/routes/create` — create route (requires API key).
+- `PUT /api/routes/:id` — update route (cannot change expectedRevenue/revenueCurrency; requiredTransportType only when no vehicle assigned).
+- `PUT /api/routes/:id/assign-vehicle` — assign vehicle (`{ "vehicleId": "vehicle-..." }` or `null` to unassign).
+- `DELETE /api/routes/:id` — delete route if not in-progress.
+- `GET /api/vehicles` — list vehicles (filters: status, transportType).
+- `GET /api/vehicles/:id` — vehicle details.
+- `POST /api/vehicles/create` — create vehicle.
+- `PUT /api/vehicles/:id` — update vehicle.
+- `DELETE /api/vehicles/:id` — delete vehicle (per business rules).
 
 ## Useful Scripts
 - `npm run build` - compile TypeScript

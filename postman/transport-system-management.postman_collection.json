@@ -298,7 +298,7 @@
           "name": "POST /api/vehicles/create",
           "request": {
             "method": "POST",
-            "description": "Create a vehicle. Required: model, licensePlate, transportType, pricePerKmEUR, purchaseDate. Optional: id, status (default available), assigned (default false). Requires X-API-Key.",
+            "description": "Create a vehicle. Required: model, licensePlate, transportType, pricePerKmEUR, purchaseDate. Optional: id, status (default available). Requires X-API-Key.",
             "header": [
               {
                 "key": "Content-Type",
@@ -311,7 +311,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"model\": \"DAF XF\",\n  \"licensePlate\": \"AA1234BB\",\n  \"transportType\": \"truck\",\n  \"status\": \"available\",\n  \"pricePerKmEUR\": 0.9,\n  \"purchaseDate\": \"2024-01-15T00:00:00.000Z\",\n  \"assigned\": false\n}"
+              "raw": "{\n  \"model\": \"DAF XF\",\n  \"licensePlate\": \"AA1234BB\",\n  \"transportType\": \"truck\",\n  \"status\": \"available\",\n  \"pricePerKmEUR\": 0.9,\n  \"purchaseDate\": \"2024-01-15T00:00:00.000Z\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/vehicles/create",
