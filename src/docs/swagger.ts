@@ -77,10 +77,20 @@ const swaggerDefinition = {
           },
           status: {
             type: "string",
-            enum: ["pending", "assigned", "in-progress", "completed", "cancelled"],
+            enum: [
+              "pending",
+              "assigned",
+              "in-progress",
+              "completed",
+              "cancelled",
+            ],
             example: "pending",
           },
-          vehicleId: { type: "string", nullable: true, example: "vehicle-12ab34cd" },
+          vehicleId: {
+            type: "string",
+            nullable: true,
+            example: "vehicle-12ab34cd",
+          },
           notes: { type: "string", nullable: true, example: "Fragile goods" },
           createdAt: {
             type: "string",
@@ -154,11 +164,25 @@ const swaggerDefinition = {
           },
           status: {
             type: "string",
-            enum: ["pending", "assigned", "in-progress", "completed", "cancelled"],
+            enum: [
+              "pending",
+              "assigned",
+              "in-progress",
+              "completed",
+              "cancelled",
+            ],
             example: "pending",
           },
-          vehicleId: { type: "string", nullable: true, example: "vehicle-9f8e7d6c" },
-          notes: { type: "string", nullable: true, example: "Deliver before noon" },
+          vehicleId: {
+            type: "string",
+            nullable: true,
+            example: "vehicle-9f8e7d6c",
+          },
+          notes: {
+            type: "string",
+            nullable: true,
+            example: "Deliver before noon",
+          },
         },
       },
       Vehicle: {
@@ -172,15 +196,22 @@ const swaggerDefinition = {
             enum: ["truck", "van", "car", "refrigerated"],
             example: "van",
           },
-          status: { type: "string", enum: ["available", "assigned"], example: "available" },
+          status: {
+            type: "string",
+            enum: ["available", "assigned"],
+            example: "available",
+          },
           pricePerKmEUR: { type: "number", example: 0.9 },
           purchaseDate: {
             type: "string",
             format: "date-time",
             example: "2024-06-01T00:00:00.000Z",
           },
-          assigned: { type: "boolean", example: false },
-          currentRouteId: { type: "string", nullable: true, example: "route-1a2b3c4d" },
+          currentRouteId: {
+            type: "string",
+            nullable: true,
+            example: "route-1a2b3c4d",
+          },
           createdAt: {
             type: "string",
             format: "date-time",
@@ -213,14 +244,17 @@ const swaggerDefinition = {
             enum: ["truck", "van", "car", "refrigerated"],
             example: "truck",
           },
-          status: { type: "string", enum: ["available", "assigned"], example: "available" },
+          status: {
+            type: "string",
+            enum: ["available", "assigned"],
+            example: "available",
+          },
           pricePerKmEUR: { type: "number", example: 1.1 },
           purchaseDate: {
             type: "string",
             format: "date-time",
             example: "2024-12-01T00:00:00.000Z",
           },
-          assigned: { type: "boolean", example: false },
         },
       },
       ApiError: {
@@ -263,13 +297,25 @@ const swaggerDefinition = {
           {
             name: "status",
             in: "query",
-            schema: { type: "string", enum: ["pending", "assigned", "in-progress", "completed", "cancelled"] },
+            schema: {
+              type: "string",
+              enum: [
+                "pending",
+                "assigned",
+                "in-progress",
+                "completed",
+                "cancelled",
+              ],
+            },
             description: "Фільтр за статусом",
           },
           {
             name: "transportType",
             in: "query",
-            schema: { type: "string", enum: ["truck", "van", "car", "refrigerated"] },
+            schema: {
+              type: "string",
+              enum: ["truck", "van", "car", "refrigerated"],
+            },
             description: "Фільтр за типом транспорту",
           },
           {
@@ -307,8 +353,16 @@ const swaggerDefinition = {
                   data: [
                     {
                       id: "route-a1b2c3d4",
-                      startPoint: { lat: 50.45, lng: 30.52, address: "Kyiv, Ukraine" },
-                      endPoint: { lat: 52.23, lng: 21.01, address: "Warsaw, Poland" },
+                      startPoint: {
+                        lat: 50.45,
+                        lng: 30.52,
+                        address: "Kyiv, Ukraine",
+                      },
+                      endPoint: {
+                        lat: 52.23,
+                        lng: 21.01,
+                        address: "Warsaw, Poland",
+                      },
                       departureDate: "2025-04-15T08:00:00.000Z",
                       requiredTransportType: "truck",
                       expectedRevenue: 850,
@@ -323,7 +377,9 @@ const swaggerDefinition = {
           },
           401: {
             description: "Невірний ключ",
-            content: { "application/json": { $ref: "#/components/schemas/ApiError" } },
+            content: {
+              "application/json": { $ref: "#/components/schemas/ApiError" },
+            },
           },
         },
       },
@@ -373,7 +429,9 @@ const swaggerDefinition = {
           },
           404: {
             description: "Не знайдено",
-            content: { "application/json": { $ref: "#/components/schemas/ApiError" } },
+            content: {
+              "application/json": { $ref: "#/components/schemas/ApiError" },
+            },
           },
         },
       },
@@ -436,7 +494,10 @@ const swaggerDefinition = {
             description: "Маршрут видалено",
             content: {
               "application/json": {
-                example: { success: true, message: "Route deleted successfully" },
+                example: {
+                  success: true,
+                  message: "Route deleted successfully",
+                },
               },
             },
           },
@@ -457,8 +518,16 @@ const swaggerDefinition = {
                 basic: {
                   summary: "Базове створення",
                   value: {
-                    startPoint: { lat: 50.45, lng: 30.52, address: "Kyiv, Ukraine" },
-                    endPoint: { lat: 52.23, lng: 21.01, address: "Warsaw, Poland" },
+                    startPoint: {
+                      lat: 50.45,
+                      lng: 30.52,
+                      address: "Kyiv, Ukraine",
+                    },
+                    endPoint: {
+                      lat: 52.23,
+                      lng: 21.01,
+                      address: "Warsaw, Poland",
+                    },
                     departureDate: "2025-04-15T08:00:00.000Z",
                     requiredTransportType: "truck",
                     expectedRevenue: 850,
@@ -502,7 +571,11 @@ const swaggerDefinition = {
               schema: {
                 type: "object",
                 properties: {
-                  vehicleId: { type: "string", nullable: true, example: "vehicle-1a2b3c4d" },
+                  vehicleId: {
+                    type: "string",
+                    nullable: true,
+                    example: "vehicle-1a2b3c4d",
+                  },
                 },
               },
               examples: {
@@ -521,7 +594,9 @@ const swaggerDefinition = {
         responses: {
           200: {
             description: "Оновлений маршрут",
-            content: { "application/json": { $ref: "#/components/schemas/Route" } },
+            content: {
+              "application/json": { $ref: "#/components/schemas/Route" },
+            },
           },
         },
       },
@@ -548,7 +623,6 @@ const swaggerDefinition = {
                       status: "available",
                       pricePerKmEUR: 0.9,
                       purchaseDate: "2024-06-01T00:00:00.000Z",
-                      assigned: false,
                     },
                   ],
                 },
@@ -636,7 +710,10 @@ const swaggerDefinition = {
             description: "Транспорт видалено",
             content: {
               "application/json": {
-                example: { success: true, message: "Vehicle deleted successfully" },
+                example: {
+                  success: true,
+                  message: "Vehicle deleted successfully",
+                },
               },
             },
           },
@@ -663,7 +740,6 @@ const swaggerDefinition = {
                     status: "available",
                     pricePerKmEUR: 1.2,
                     purchaseDate: "2024-05-01T00:00:00.000Z",
-                    assigned: false,
                   },
                 },
               },

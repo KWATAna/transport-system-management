@@ -32,10 +32,9 @@ interface VehicleSeed {
   licensePlate: string;
   model: string;
   transportType: string;
-  status: string;
+  status: "available" | "assigned";
   pricePerKmEUR: number;
   currentRouteId?: string;
-  assigned: "available" | "assigned";
   purchaseDate?: string;
   createdAt: string;
   updatedAt: string;
@@ -109,7 +108,6 @@ const generateVehicles = (count: number): VehicleSeed[] => {
       transportType,
       status,
       pricePerKmEUR: parseFloat((Math.random() * 1.5 + 0.5).toFixed(2)),
-      assigned: status,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };

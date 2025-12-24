@@ -7,10 +7,7 @@ const transportTypes = ["truck", "van", "car", "refrigerated"] as const;
 const vehicleIdRegex = /^vehicle-[0-9a-f]{8}$/;
 
 export const createVehicleSchema = z.object({
-  id: z
-    .string()
-    .regex(vehicleIdRegex, "Invalid vehicle ID format")
-    .optional(),
+  id: z.string().regex(vehicleIdRegex, "Invalid vehicle ID format").optional(),
   model: z.string().min(1, "Model cannot be empty"),
 
   licensePlate: z
@@ -27,5 +24,17 @@ export const createVehicleSchema = z.object({
     const d = new Date(date);
     return !isNaN(d.getTime());
   }, "Completion date must be a valid date in ISO format"),
-  assigned: z.boolean().default(false),
+});
+
+export const updateVehicleSchema = createVehicleSchema.partial().extend({
+  currentLocation: z
+    .object({
+      lat: z.number(),
+      lng: z.number(),
+    })
+    .nullable()
+    .optional(),
+  notes: z.string().optional(),
+  fuelType: z.string().optional(),
+  capacity: z.number().positive("Capacity must be greater than 0").optional(),
 });
