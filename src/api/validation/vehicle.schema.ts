@@ -5,6 +5,10 @@ const vehicleStatuses = ["available", "assigned"] as const;
 const transportTypes = ["truck", "van", "car", "refrigerated"] as const;
 
 const vehicleIdRegex = /^vehicle-[0-9a-f]{8}$/;
+const paginationSchema = {
+  limit: z.coerce.number().int().positive().max(100).default(50),
+  offset: z.coerce.number().int().min(0).default(0),
+};
 
 export const createVehicleSchema = z.object({
   id: z.string().regex(vehicleIdRegex, "Invalid vehicle ID format").optional(),
@@ -38,3 +42,11 @@ export const updateVehicleSchema = createVehicleSchema.partial().extend({
   fuelType: z.string().optional(),
   capacity: z.number().positive("Capacity must be greater than 0").optional(),
 });
+
+export const vehicleQuerySchema = z.object({
+  status: z.enum(vehicleStatuses).optional(),
+  transportType: z.enum(transportTypes).optional(),
+  ...paginationSchema,
+});
+
+export type VehicleQueryDto = z.infer<typeof vehicleQuerySchema>;

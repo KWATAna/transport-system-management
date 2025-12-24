@@ -2,6 +2,12 @@
 
 Node/Express service that talks to DynamoDB. Designed for local development with a Dockerized DynamoDB Local and environment-driven configuration.
 
+## Features
+- Route/vehicle management with validation; routes store revenue and converted amounts (EUR/USD/UAH) at vehicle assignment using Fixer.io rates.
+- DynamoDB tables provisioned via scripts (`Routes`, `Vehicles`) with GSIs; seeded sample data for quick start.
+- All endpoints are private: API key required on requests (`X-API-Key`).
+- Postman collection for every endpoint: `postman/transport-system-management.postman_collection.json`.
+
 ## Prerequisites
 - Node 20+ and npm
 - Docker + Docker Compose
@@ -32,6 +38,7 @@ With the Docker container running:
 npm run create-tables:ts  # creates Routes and Vehicles tables
 npm run seed-tables:ts    # seeds sample data
 ```
+Tables are idempotent (scripts skip existing tables); seeds generate vehicles/routes with varied statuses and transport types.
 
 ## Serverless Offline
 Optional: run the Lambda handler locally with Serverless.
@@ -44,6 +51,15 @@ npx serverless offline --stage dev
 - `npm run build` - compile TypeScript
 - `npm run start` - run compiled server from `dist`
 - `npm run lint` / `npm run lint:fix` - lint code
+- `npm test` - run unit tests for services
+
+## Access & Security
+- Requests require header `X-API-Key: $API_KEY` (set in env). Protect `/docs` via network controls or add auth if exposing beyond local.
+- Default CORS is enabled; tighten allowed origins if serving from specific frontends only.
+- Set reasonable env values for `FIXER_API_KEY` to enable currency conversion.
+
+## Postman
+Import `postman/transport-system-management.postman_collection.json` to call all available endpoints (health, routes, vehicles). Set the `X-API-Key` variable in the collection or environment.
 
 ## Troubleshooting
 - If the API cannot reach DynamoDB, ensure Docker is running and `AWS_DYNAMODB_ENDPOINT` points to `http://localhost:8000`.

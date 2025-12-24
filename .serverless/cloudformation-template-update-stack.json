@@ -196,7 +196,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/transport-system-management/dev/1766513873529-2025-12-23T18:17:53.529Z/transport-system-management.zip"
+          "S3Key": "serverless/transport-system-management/dev/1766561066018-2025-12-24T07:24:26.018Z/transport-system-management.zip"
         },
         "Handler": "src/lambda.handler",
         "Runtime": "nodejs20.x",
@@ -223,14 +223,14 @@
         "ApiLogGroup"
       ]
     },
-    "ApiLambdaVersionLjtAtdkQ4nLnhRYu5PWVTrbjtN0DEZdhf6SFI0agM": {
+    "ApiLambdaVersionR7ZMP1c0RJRr44jDPZOQI84Jp6Up9uGx4B9B6MZGwY": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "ApiLambdaFunction"
         },
-        "CodeSha256": "LtUhqRBqhBFqLtO4F8hbI7Zrkrb1sp/6TlugB9HrCcU="
+        "CodeSha256": "4+bj8+hVCktS6V+UOAAPAV3wOmRlE+RqhCZL5nSf/GA="
       }
     },
     "HttpApi": {
@@ -487,7 +487,7 @@
     "ApiLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ApiLambdaVersionLjtAtdkQ4nLnhRYu5PWVTrbjtN0DEZdhf6SFI0agM"
+        "Ref": "ApiLambdaVersionR7ZMP1c0RJRr44jDPZOQI84Jp6Up9uGx4B9B6MZGwY"
       },
       "Export": {
         "Name": "sls-transport-system-management-dev-ApiLambdaFunctionQualifiedArn"

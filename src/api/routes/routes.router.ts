@@ -7,12 +7,13 @@ import {
   createRouteRepository,
   createVehicleRepository,
 } from "../repository/repository.provider";
-import { validateBody } from "../middleware/validation.middleware";
+import { validateBody, validateQuery } from "../middleware/validation.middleware";
 import { apiKeyMiddleware } from "../middleware/api-key.middleware";
 import {
   createRouteSchema,
   updateRouteSchema,
   assignVehicleSchema,
+  routeQuerySchema,
 } from "../validation/route.schema";
 
 const routeRepository = createRouteRepository();
@@ -31,7 +32,7 @@ const routesController = new RoutesController(routeService);
 
 router.use(apiKeyMiddleware);
 
-router.get("/", routesController.getAllRoutes);
+router.get("/", validateQuery(routeQuerySchema), routesController.getAllRoutes);
 
 router.get("/:id", routesController.getRouteById);
 

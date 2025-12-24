@@ -3,7 +3,7 @@
     "_postman_id": "a9dbd9fb-4b21-4e13-9a3c-2f8650c7e0b5",
     "name": "Transport System Management",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "description": "Collection for Transport System Management API. Set `baseUrl` (e.g. http://localhost:3000) and `apiKey` (x-api-key) in variables."
+    "description": "Collection for Transport System Management API. Set `baseUrl` (e.g. http://localhost:3000) and `apiKey` (X-API-Key) in variables."
   },
   "variable": [
     {
@@ -45,10 +45,10 @@
           "name": "GET /api/routes",
           "request": {
             "method": "GET",
-            "description": "List routes with optional filters. Query params: status, transportType, limit (default 50), offset (default 0). Requires x-api-key.",
+            "description": "List routes with optional filters. Query params: status, transportType, limit (default 50), offset (default 0). Requires X-API-Key.",
             "header": [
               {
-                "key": "x-api-key",
+                "key": "X-API-Key",
                 "value": "{{apiKey}}"
               }
             ],
@@ -63,10 +63,10 @@
           "name": "GET /api/routes/:id",
           "request": {
             "method": "GET",
-            "description": "Fetch a single route by id. If a vehicle is assigned, vehicle details are included. Requires x-api-key.",
+            "description": "Fetch a single route by id. If a vehicle is assigned, vehicle details are included. Requires X-API-Key.",
             "header": [
               {
-                "key": "x-api-key",
+                "key": "X-API-Key",
                 "value": "{{apiKey}}"
               }
             ],
@@ -81,14 +81,14 @@
           "name": "POST /api/routes/create",
           "request": {
             "method": "POST",
-            "description": "Create a new route. Required fields: startPoint {lat,lng}, endPoint {lat,lng}, departureDate (future ISO), requiredTransportType, expectedRevenue. Optional: status (default pending), completionDate, vehicleId. Requires x-api-key.",
+            "description": "Create a new route. Required fields: startPoint {lat,lng}, endPoint {lat,lng}, departureDate (future ISO), requiredTransportType, expectedRevenue. Optional: status (default pending), completionDate, vehicleId. Requires X-API-Key.",
             "header": [
               {
                 "key": "Content-Type",
                 "value": "application/json"
               },
               {
-                "key": "x-api-key",
+                "key": "X-API-Key",
                 "value": "{{apiKey}}"
               }
             ],
@@ -107,14 +107,14 @@
           "name": "PUT /api/routes/:id",
           "request": {
             "method": "PUT",
-            "description": "Update a route. Supports status changes, revenue, completionDate, vehicleId (nullable to unassign). At least one field required. Requires x-api-key.",
+            "description": "Update a route. Supports status changes, revenue, completionDate, vehicleId (nullable to unassign). At least one field required. Requires X-API-Key.",
             "header": [
               {
                 "key": "Content-Type",
                 "value": "application/json"
               },
               {
-                "key": "x-api-key",
+                "key": "X-API-Key",
                 "value": "{{apiKey}}"
               }
             ],
@@ -133,10 +133,10 @@
           "name": "DELETE /api/routes/:id",
           "request": {
             "method": "DELETE",
-            "description": "Delete a route if it is not in-progress. If a vehicle is linked and the route is deletable, the vehicle is freed first. Requires x-api-key.",
+            "description": "Delete a route if it is not in-progress. If a vehicle is linked and the route is deletable, the vehicle is freed first. Requires X-API-Key.",
             "header": [
               {
-                "key": "x-api-key",
+                "key": "X-API-Key",
                 "value": "{{apiKey}}"
               }
             ],
@@ -151,14 +151,14 @@
           "name": "PUT /api/routes/:id/assign-vehicle",
           "request": {
             "method": "PUT",
-            "description": "Assign a vehicle to a pending route. Body expects vehicleId. Route status becomes in-progress and vehicle status assigned. Requires x-api-key.",
+            "description": "Assign a vehicle to a pending route. Body expects vehicleId. Route status becomes in-progress and vehicle status assigned. Requires X-API-Key.",
             "header": [
               {
                 "key": "Content-Type",
                 "value": "application/json"
               },
               {
-                "key": "x-api-key",
+                "key": "X-API-Key",
                 "value": "{{apiKey}}"
               }
             ],
@@ -177,14 +177,14 @@
           "name": "PUT /api/routes/:id/unassign-vehicle",
           "request": {
             "method": "PUT",
-            "description": "Unassign vehicle from route. Send { \"vehicleId\": null }. Route status resets to pending and vehicle becomes available. Requires x-api-key.",
+            "description": "Unassign vehicle from route. Send { \"vehicleId\": null }. Route status resets to pending and vehicle becomes available. Requires X-API-Key.",
             "header": [
               {
                 "key": "Content-Type",
                 "value": "application/json"
               },
               {
-                "key": "x-api-key",
+                "key": "X-API-Key",
                 "value": "{{apiKey}}"
               }
             ],
@@ -208,10 +208,10 @@
           "name": "GET /api/vehicles",
           "request": {
             "method": "GET",
-            "description": "List vehicles. Optional filters: status, transportType. Requires x-api-key.",
+            "description": "List vehicles. Optional filters: status, transportType. Requires X-API-Key.",
             "header": [
               {
-                "key": "x-api-key",
+                "key": "X-API-Key",
                 "value": "{{apiKey}}"
               }
             ],
@@ -226,10 +226,10 @@
           "name": "GET /api/vehicles/:id",
           "request": {
             "method": "GET",
-            "description": "Fetch vehicle by id. Requires x-api-key.",
+            "description": "Fetch vehicle by id. Requires X-API-Key.",
             "header": [
               {
-                "key": "x-api-key",
+                "key": "X-API-Key",
                 "value": "{{apiKey}}"
               }
             ],
@@ -244,14 +244,14 @@
           "name": "POST /api/vehicles/create",
           "request": {
             "method": "POST",
-            "description": "Create a vehicle. Required: model, licensePlate, transportType, pricePerKmEUR, purchaseDate. Optional: id, status (default available), assigned (default false). Requires x-api-key.",
+            "description": "Create a vehicle. Required: model, licensePlate, transportType, pricePerKmEUR, purchaseDate. Optional: id, status (default available), assigned (default false). Requires X-API-Key.",
             "header": [
               {
                 "key": "Content-Type",
                 "value": "application/json"
               },
               {
-                "key": "x-api-key",
+                "key": "X-API-Key",
                 "value": "{{apiKey}}"
               }
             ],
@@ -270,14 +270,14 @@
           "name": "PUT /api/vehicles/:id",
           "request": {
             "method": "PUT",
-            "description": "Update vehicle details (e.g., status, pricePerKmEUR). Requires x-api-key.",
+            "description": "Update vehicle details (e.g., status, pricePerKmEUR). Requires X-API-Key.",
             "header": [
               {
                 "key": "Content-Type",
                 "value": "application/json"
               },
               {
-                "key": "x-api-key",
+                "key": "X-API-Key",
                 "value": "{{apiKey}}"
               }
             ],
@@ -296,10 +296,10 @@
           "name": "DELETE /api/vehicles/:id",
           "request": {
             "method": "DELETE",
-            "description": "Delete vehicle by id. Fails if assigned per business rules. Requires x-api-key.",
+            "description": "Delete vehicle by id. Fails if assigned per business rules. Requires X-API-Key.",
             "header": [
               {
-                "key": "x-api-key",
+                "key": "X-API-Key",
                 "value": "{{apiKey}}"
               }
             ],

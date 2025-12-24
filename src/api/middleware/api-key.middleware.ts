@@ -16,7 +16,7 @@ export const apiKeyMiddleware = (
     return;
   }
 
-  const providedKey = req.header("x-api-key");
+  const providedKey = req.header("X-API-Key");
 
   if (!providedKey || providedKey !== configuredKey) {
     res.status(StatusCodes.UNAUTHORIZED).json({

@@ -21,7 +21,7 @@ const swaggerDefinition = {
       ApiKeyAuth: {
         type: "apiKey",
         in: "header",
-        name: "x-api-key",
+        name: "X-API-Key",
         description: "API key required for protected endpoints",
       },
     },

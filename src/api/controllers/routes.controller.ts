@@ -5,9 +5,9 @@ import { StatusCodes } from "http-status-codes";
 import { ROUTE_STATUSES } from "../constants";
 import {
   createRouteSchema,
-  routeQuerySchema,
   updateRouteSchema,
   assignVehicleSchema,
+  RouteQueryDto,
 } from "../validation/route.schema";
 
 export class RoutesController {
@@ -19,9 +19,8 @@ export class RoutesController {
     next: NextFunction
   ): Promise<void> => {
     try {
-      const queryParams = routeQuerySchema.parse(req.query);
-
-      const routes = await this.routeService.getAll(queryParams);
+      const filters = req.query as unknown as RouteQueryDto;
+      const routes = await this.routeService.getAll(filters);
 
       res.status(200).json({
         success: true,

@@ -3,6 +3,7 @@ import { IVehicleService } from "../interfaces/services.interface";
 import { UpdateVehicleDto } from "../types/vehicle.types";
 import {
   createVehicleSchema,
+  VehicleQueryDto,
   updateVehicleSchema,
 } from "../validation/vehicle.schema";
 
@@ -15,7 +16,8 @@ export class VehiclesController {
     next: NextFunction
   ): Promise<void> => {
     try {
-      const vehicles = await this.vehicleService.getAll(req.query);
+      const filters = req.query as unknown as VehicleQueryDto;
+      const vehicles = await this.vehicleService.getAll(filters);
 
       res.status(200).json({
         success: true,

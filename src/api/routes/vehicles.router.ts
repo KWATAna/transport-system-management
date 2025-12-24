@@ -2,9 +2,9 @@ import { Router } from "express";
 import { VehiclesController } from "../controllers/vehicles.controller";
 import { VehicleService } from "../service/vehicles.service";
 import { createVehicleRepository } from "../repository/repository.provider";
-import { validateBody } from "../middleware/validation.middleware";
+import { validateBody, validateQuery } from "../middleware/validation.middleware";
 import { apiKeyMiddleware } from "../middleware/api-key.middleware";
-import { createVehicleSchema } from "../validation/vehicle.schema";
+import { createVehicleSchema, vehicleQuerySchema } from "../validation/vehicle.schema";
 
 const vehicleRepository = createVehicleRepository();
 const vehicleService = new VehicleService(vehicleRepository);
@@ -13,7 +13,7 @@ const vehiclesController = new VehiclesController(vehicleService);
 
 router.use(apiKeyMiddleware);
 
-router.get("/", vehiclesController.getAllVehicles);
+router.get("/", validateQuery(vehicleQuerySchema), vehiclesController.getAllVehicles);
 
 router.get("/:id", vehiclesController.getVehicleById);
 
