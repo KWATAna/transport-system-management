@@ -7,6 +7,10 @@ Node/Express service that talks to DynamoDB. Designed for local development with
 - DynamoDB tables provisioned via scripts (`Routes`, `Vehicles`) with GSIs; seeded sample data for quick start.
 - All endpoints are private: API key required on requests (`X-API-Key`).
 - Postman collection for every endpoint: `postman/transport-system-management.postman_collection.json`.
+- Swagger/OpenAPI documentation available at `/docs`; auto-generated spec in `src/docs/swagger.ts`.
+- Uses DynamoDB (NoSQL) for persistence; scripts provision GSIs for status/transportType/vehicle lookups.
+- Route distance calculations can integrate OSRM client; currency conversion via Fixer.io.
+- Written in TypeScript end-to-end (app, scripts, tests).
 
 ## Prerequisites
 - Node 20+ and npm
@@ -39,6 +43,13 @@ npm run create-tables:ts  # creates Routes and Vehicles tables
 npm run seed-tables:ts    # seeds sample data
 ```
 Tables are idempotent (scripts skip existing tables); seeds generate vehicles/routes with varied statuses and transport types.
+
+## Seed via deployed API (Lambda)
+If you want to seed a deployed environment through the API (requires working Fixer and API key):
+```sh
+API_BASE_URL="https://your-api.example.com" API_KEY="your-key" npm run seed-api:ts
+```
+This script (`scripts/seed.api.ts`) uses the public endpoints to create vehicles/routes and assigns some vehicles to routes so revenue conversions are stored.
 
 ## Serverless Offline
 Optional: run the Lambda handler locally with Serverless.

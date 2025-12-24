@@ -54,8 +54,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/api/routes",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "routes"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "routes"
+              ]
             }
           }
         },
@@ -72,8 +77,14 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/api/routes/{{routeId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "routes", "{{routeId}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "routes",
+                "{{routeId}}"
+              ]
             }
           }
         },
@@ -81,7 +92,7 @@
           "name": "POST /api/routes/create",
           "request": {
             "method": "POST",
-            "description": "Create a new route. Required fields: startPoint {lat,lng}, endPoint {lat,lng}, departureDate (future ISO), requiredTransportType, expectedRevenue. Optional: status (default pending), completionDate, vehicleId. Requires X-API-Key.",
+            "description": "Create a new route. Required fields: startPoint {lat,lng}, endPoint {lat,lng}, departureDate (future ISO), requiredTransportType, expectedRevenue. Optional: completionDate, vehicleId. Requires X-API-Key.",
             "header": [
               {
                 "key": "Content-Type",
@@ -94,12 +105,18 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"startPoint\": { \"lat\": 50.45, \"lng\": 30.52, \"address\": \"Kyiv\" },\n  \"endPoint\": { \"lat\": 49.84, \"lng\": 24.03, \"address\": \"Lviv\" },\n  \"departureDate\": \"2025-01-01T10:00:00.000Z\",\n  \"requiredTransportType\": \"truck\",\n  \"expectedRevenue\": 12000,\n  \"status\": \"pending\"\n}"
+              "raw": "{\n  \"startPoint\": {\n    \"lat\": 50.45,\n    \"lng\": 30.52,\n    \"address\": \"Kyiv\"\n  },\n  \"endPoint\": {\n    \"lat\": 49.84,\n    \"lng\": 24.03,\n    \"address\": \"Lviv\"\n  },\n  \"departureDate\": \"2025-01-01T10:00:00.000Z\",\n  \"requiredTransportType\": \"truck\",\n  \"expectedRevenue\": 12000\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/routes/create",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "routes", "create"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "routes",
+                "create"
+              ]
             }
           }
         },
@@ -120,12 +137,18 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"status\": \"completed\",\n  \"completionDate\": \"2025-01-10T12:00:00.000Z\",\n  \"actualRevenue\": 11800,\n  \"actualRevenueCurrency\": \"EUR\"\n}"
+              "raw": "{\n  \"completionDate\": \"2025-01-10T12:00:00.000Z\",\n  \"actualRevenue\": 11800,\n  \"actualRevenueCurrency\": \"EUR\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/routes/{{routeId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "routes", "{{routeId}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "routes",
+                "{{routeId}}"
+              ]
             }
           }
         },
@@ -142,8 +165,14 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/api/routes/{{routeId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "routes", "{{routeId}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "routes",
+                "{{routeId}}"
+              ]
             }
           }
         },
@@ -168,8 +197,15 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/routes/{{routeId}}/assign-vehicle",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "routes", "{{routeId}}", "assign-vehicle"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "routes",
+                "{{routeId}}",
+                "assign-vehicle"
+              ]
             }
           }
         },
@@ -194,8 +230,15 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/routes/{{routeId}}/assign-vehicle",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "routes", "{{routeId}}", "assign-vehicle"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "routes",
+                "{{routeId}}",
+                "assign-vehicle"
+              ]
             }
           }
         }
@@ -217,8 +260,13 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/api/vehicles",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "vehicles"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vehicles"
+              ]
             }
           }
         },
@@ -235,8 +283,14 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/api/vehicles/{{vehicleId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "vehicles", "{{vehicleId}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vehicles",
+                "{{vehicleId}}"
+              ]
             }
           }
         },
@@ -261,8 +315,14 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/vehicles/create",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "vehicles", "create"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vehicles",
+                "create"
+              ]
             }
           }
         },
@@ -287,8 +347,14 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/vehicles/{{vehicleId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "vehicles", "{{vehicleId}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vehicles",
+                "{{vehicleId}}"
+              ]
             }
           }
         },
@@ -305,8 +371,14 @@
             ],
             "url": {
               "raw": "{{baseUrl}}/api/vehicles/{{vehicleId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "vehicles", "{{vehicleId}}"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "vehicles",
+                "{{vehicleId}}"
+              ]
             }
           }
         }

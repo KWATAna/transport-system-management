@@ -74,8 +74,6 @@ export const createRouteSchema = z
 
     actualRevenueCurrency: Currency.optional(),
 
-    status: RouteStatus.default("pending"),
-
     vehicleId: z
       .string()
       .regex(vehicleIdRegex, "Invalid vehicle ID format")

@@ -17,6 +17,7 @@
     "prisma:studio": "prisma studio",
     "create-tables:ts": "ts-node scripts/create.tables.ts",
     "seed-tables:ts": "ts-node scripts/seed.tables.ts",
+    "seed-api:ts": "ts-node scripts/seed.api.ts",
     "test": "jest"
   },
   "keywords": [],
